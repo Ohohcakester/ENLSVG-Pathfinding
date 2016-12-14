@@ -26,6 +26,6 @@ public:
     }
 };
 
-RNG global_rng(time(0));
+extern RNG global_rng;
 
 #endif
