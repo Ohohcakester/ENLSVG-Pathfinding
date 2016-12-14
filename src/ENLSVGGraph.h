@@ -4,6 +4,7 @@
 #include "PathfindingDataTypes.h"
 #include <vector>
 class Grid;
+class LineOfSightScanner;
 
 class ENLSVGGraph {
 public:
@@ -12,12 +13,15 @@ public:
         double weight;
     };
 
-    ENLSVGGraph(const Grid& grid);
+    ENLSVGGraph(const Grid& grid, const LineOfSightScanner& scanner);
 
     const int sizeX;
     const int sizeY;
     std::vector<GridVertex> vertices;
     std::vector<std::vector<OutgoingEdge>> edgeLists;
+
+private:
+    const LineOfSightScanner& scanner;
 };
 
 #endif

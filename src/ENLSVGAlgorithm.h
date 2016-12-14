@@ -2,8 +2,9 @@
 #define _ENLSVG_ALGORITHM_H_
 
 #include "PathfindingDataTypes.h"
+#include "ENLSVGGraph.h"
 class Grid;
-class ENLSVGGraph;
+class LineOfSightScanner;
 
 class ENLSVGAlgorithm {
 public:
@@ -12,8 +13,9 @@ public:
     Path computePath(const GridVertex& start, const GridVertex& end);
 
 private:
-    const ENLSVGGraph& graph;
+    const LineOfSightScanner& scanner;
     const Grid& grid;
+    const ENLSVGGraph graph;
 };
 
 
