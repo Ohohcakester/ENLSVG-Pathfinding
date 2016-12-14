@@ -11,6 +11,9 @@ public:
     struct OutgoingEdge {
         int dest;
         double weight;
+
+        OutgoingEdge() {}
+        //OutgoingEdge(int dest, double weight): dest(dest), weight(weight) {}
     };
 
     ENLSVGGraph(const Grid& grid, const LineOfSightScanner& scanner);
@@ -19,6 +22,7 @@ public:
     const int sizeY;
     std::vector<GridVertex> vertices;
     std::vector<std::vector<OutgoingEdge>> edgeLists;
+    std::vector<std::vector<int>> nodeIndexes;
 
 private:
     const LineOfSightScanner& scanner;

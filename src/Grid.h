@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 class Grid {
 public:
@@ -23,6 +24,12 @@ public:
 
     inline bool isOuterCorner(int x, int y) const {
         return (isBlocked(x,y) || isBlocked(x+1,y+1)) != (isBlocked(x+1,y) || isBlocked(x,y+1));
+    }
+
+    static inline double euclideanDistance(int x1, int y1, int x2, int y2) {
+        int dx = x2-x1;
+        int dy = y2-y1;
+        return sqrt(dx*dx+dy*dy);
     }
 
     void printGrid() const;
