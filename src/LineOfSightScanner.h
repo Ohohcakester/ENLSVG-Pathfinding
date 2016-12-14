@@ -8,7 +8,7 @@ class LineOfSightScanner {
 public:
     LineOfSightScanner(const Grid& grid);
 
-    computeNeighbours(std::vector<GridVertex> neighbours, int x, int y) const;
+    std::vector<GridVertex> computeNeighbours(const GridVertex& gridVertex) const;
 
 private:
     const Grid& grid;

@@ -2,9 +2,9 @@
 #include "Grid.h"
 
 LineOfSightScanner::LineOfSightScanner(const Grid& grid): grid(grid) {
-    
+
 }
 
-LineOfSightScanner::computeNeighbours(std::vector<GridVertex> neighbours, int x, int y) const {
-    
+std::vector<GridVertex> LineOfSightScanner::computeNeighbours(const GridVertex& gridVertex) const {
+
 }
