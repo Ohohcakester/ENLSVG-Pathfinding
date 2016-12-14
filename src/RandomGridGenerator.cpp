@@ -3,7 +3,7 @@
 #include "RandomNumberGenerator.h"
 #include <vector>
 
-void RandomGridGenerator::initialiseRandomGrid(Grid& grid, const float percentBlocked) {
+void RandomGridGenerator::generateRandomGrid(Grid& grid, const float percentBlocked) {
     const int sizeX = grid.sizeX;
     const int sizeY = grid.sizeY;
 
@@ -20,7 +20,7 @@ void RandomGridGenerator::generateAutomataGrid(Grid& grid, const float percentBl
     const int totalSize = sizeX*sizeY;
     const int resolution = std::max((int)((sizeX+sizeY)*resolutionMultiplier/150), 1);
 
-    initialiseRandomGrid(grid, percentBlocked);
+    generateRandomGrid(grid, percentBlocked);
 
     std::vector<std::vector<bool>>& blocked = grid.blocked;
     // Count: used for DP computation of number of blocked neighbours.
