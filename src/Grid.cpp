@@ -9,14 +9,6 @@ Grid::Grid(int sizeX, int sizeY): sizeX(sizeX), sizeY(sizeY), totalSize(sizeX*si
     }
 }
 
-void Grid::initialiseRandomGrid(float percentBlocked) {
-    for (int y=0; y<sizeY; ++y) {
-        for (int x=0; x<sizeX; ++x) {
-            blocked[y][x] = global_rng.bernoulli(percentBlocked);
-        }
-    }
-}
-
 void Grid::printGrid() {
     for (int y=0;y<sizeY;++y) {
         for (int x=0;x<sizeX;++x) {
