@@ -21,7 +21,7 @@ public:
         blocked[y][x] = value;
     }
 
-
+    void initialiseRandomGrid(float percentBlocked);
 };
 
 
