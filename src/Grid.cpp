@@ -9,7 +9,7 @@ Grid::Grid(int sizeX, int sizeY): sizeX(sizeX), sizeY(sizeY), totalSize(sizeX*si
     }
 }
 
-void Grid::printGrid() {
+void Grid::printGrid() const {
     for (int y=0;y<sizeY;++y) {
         for (int x=0;x<sizeX;++x) {
             std::cout << (blocked[y][x] ? "X" : " ");
