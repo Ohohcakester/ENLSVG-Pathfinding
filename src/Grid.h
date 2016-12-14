@@ -22,6 +22,8 @@ public:
     }
 
     void initialiseRandomGrid(float percentBlocked);
+
+    void printGrid();
 };
 
 
