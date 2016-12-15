@@ -3,11 +3,21 @@
 
 #include <string>
 class Grid;
+class TGAImage;
+class ENLSVGGraph;
 
 class Drawer {
 public:
-    static void drawGrid(const Grid& grid, const std::string& filename);
+    Drawer(const Grid& grid);
+    ~Drawer();
 
+    void save(const std::string& filename);
+    void drawGrid(const Grid& grid);
+    void drawVisibilityGraph(const ENLSVGGraph& graph);
+
+    TGAImage* imgPtr;
+    const int sizeX;
+    const int sizeY;
 };
 
 

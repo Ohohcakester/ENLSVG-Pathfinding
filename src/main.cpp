@@ -12,6 +12,8 @@ int main() {
     //RandomGridGenerator::generateRandomGrid(grid, 0.5f);
     RandomGridGenerator::generateAutomataGrid(grid, 0.5f, 5, 1.f);
 
-    ENLSVGAlgorithm enlsvg(grid);
-    //Drawer::drawGrid(grid, "outputGrid.tga");
+    //ENLSVGAlgorithm enlsvg(grid);
+    Drawer drawer(grid);
+    drawer.drawGrid(grid);
+    drawer.save("outputImage.tga");
 }
