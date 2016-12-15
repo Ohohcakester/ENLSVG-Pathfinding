@@ -1,5 +1,10 @@
 #include "Image.h"
 
+/**
+ * Credit goes to Daniel Beard's Programming Blog for the base code
+ * https://danielbeard.wordpress.com/2011/06/06/image-saving-code-c/
+ */
+
 //Default Constructor
 TGAImage::TGAImage() {
 
@@ -65,4 +70,25 @@ void TGAImage::WriteImage(string filename) {
 	//close the file
 	o.close();
 	
+}
+
+namespace Colours {
+    const Colour RED(255,0,0);
+    const Colour ORANGE(255,127,0);
+    const Colour YELLOW(255,255,0);
+    const Colour GREEN(0,255,0);
+    const Colour BLUE(0,0,255);
+    const Colour PURPLE(127,0,255);
+    const Colour MAGENTA(255,0,255);
+    const Colour BLACK(0,0,0);
+    const Colour WHITE(255,255,255);
+    const Colour BROWN(150,75,0);
+    const Colour LIGHTGREY(192,192,192);
+    const Colour GREY(127,127,127);
+    const Colour DARKGREY(64,64,64);
+    const Colour CYAN(255,255,0);
+    const Colour LIME(127,255,0);
+    const Colour AQUA(0,127,255);
+    const Colour TEAL(0,127,127);
+    const Colour PINK(255,192,203);
 }

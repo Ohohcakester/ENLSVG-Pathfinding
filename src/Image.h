@@ -1,6 +1,11 @@
 #ifndef __IMAGE_SAVER__
 #define __IMAGE_SAVER__
 
+/**
+ * Credit goes to Daniel Beard's Programming Blog for the base code
+ * https://danielbeard.wordpress.com/2011/06/06/image-saving-code-c/
+ */
+
 //includes
 #include <vector>
 #include <string>
@@ -9,10 +14,37 @@
 
 using namespace std;
 
+
 //data structures
 struct Colour {
 	unsigned char r,g,b,a;
+
+	Colour() {}
+	Colour(unsigned char r, unsigned char g, unsigned char b, unsigned char a): r(r), g(g), b(b), a(a) {}
+	Colour(unsigned char r, unsigned char g, unsigned char b): r(r), g(g), b(b), a(255) {}
 };
+
+namespace Colours {
+    extern const Colour RED;
+    extern const Colour ORANGE;
+    extern const Colour YELLOW;
+    extern const Colour GREEN;
+    extern const Colour BLUE;
+    extern const Colour PURPLE;
+    extern const Colour MAGENTA;
+    extern const Colour BLACK;
+    extern const Colour WHITE;
+    extern const Colour BROWN;
+    extern const Colour LIGHTGREY;
+    extern const Colour GREY;
+    extern const Colour DARKGREY;
+    extern const Colour CYAN;
+    extern const Colour LIME;
+    extern const Colour AQUA;
+    extern const Colour TEAL;
+    extern const Colour PINK;
+}
+
 
 class TGAImage {
 
