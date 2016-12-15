@@ -25,7 +25,7 @@ struct Fraction {
         }*/
         const int g = gcd(n,d);
         // Denominators are strictly positive.
-        if (d > 0) {
+        if (d/g > 0) {
             this->n = n/g;
             this->d = d/g;
         } else {

@@ -2,6 +2,7 @@
 #include "Grid.h"
 #include "Drawer.h"
 #include "RandomGridGenerator.h"
+#include "ENLSVGAlgorithm.h"
 
 int main() {
     int sizeX = 200;
@@ -11,5 +12,6 @@ int main() {
     //RandomGridGenerator::generateRandomGrid(grid, 0.5f);
     RandomGridGenerator::generateAutomataGrid(grid, 0.5f, 5, 1.f);
 
-    Drawer::drawGrid(grid, "outputGrid.tga");
+    ENLSVGAlgorithm enlsvg(grid);
+    //Drawer::drawGrid(grid, "outputGrid.tga");
 }

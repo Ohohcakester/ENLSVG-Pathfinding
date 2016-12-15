@@ -6,14 +6,14 @@ LineOfSightScanner::LineOfSightScanner(const Grid& grid): grid(grid), sizeX(grid
     computeExtents();
 }
 
-std::vector<GridVertex> LineOfSightScanner::computeAllDirNeighbours(ScannerStacks& data, int sx, int sy) const {
+void LineOfSightScanner::computeAllDirNeighbours(ScannerStacks& data, int sx, int sy) const {
     data.clear();
 
     generateAllDirectionStartingStates(data, sx, sy);
     exploreStates(data, sx, sy);
 }
 
-std::vector<GridVertex> LineOfSightScanner::computeTautDirNeighbours(ScannerStacks& data, int sx, int sy) const {
+void LineOfSightScanner::computeTautDirNeighbours(ScannerStacks& data, int sx, int sy) const {
     data.clear();
 
     generateTautDirectionStartingStates(data, sx, sy);

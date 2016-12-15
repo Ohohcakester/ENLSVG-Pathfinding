@@ -10,12 +10,12 @@ typedef Fraction Rational;
 
 struct ScanInterval {
     const int y;
-    const Rational& xL;
-    const Rational& xR;
+    const Rational xL;
+    const Rational xR;
     const bool leftInclusive;
     const bool rightInclusive;
 
-    ScanInterval(int y, const Rational& xL, const Rational& xR, bool leftInclusive, bool rightInclusive)
+    ScanInterval(int y, const Rational xL, const Rational xR, bool leftInclusive, bool rightInclusive)
         : y(y), xL(xL), xR(xR), leftInclusive(leftInclusive), rightInclusive(rightInclusive) {}
 };
 
@@ -47,8 +47,8 @@ class LineOfSightScanner {
 public:
     LineOfSightScanner(const Grid& grid);
 
-    std::vector<GridVertex> computeAllDirNeighbours(ScannerStacks& data, int sx, int sy) const;
-    std::vector<GridVertex> computeTautDirNeighbours(ScannerStacks& data, int sx, int sy) const;
+    void computeAllDirNeighbours(ScannerStacks& data, int sx, int sy) const;
+    void computeTautDirNeighbours(ScannerStacks& data, int sx, int sy) const;
     void computeExtents();
 
     inline int leftUpExtent(int xL, int y) const {

@@ -23,7 +23,7 @@ public:
     }
 
     inline bool isOuterCorner(int x, int y) const {
-        return (isBlocked(x,y) || isBlocked(x+1,y+1)) != (isBlocked(x+1,y) || isBlocked(x,y+1));
+        return (isBlocked(x-1,y-1) || isBlocked(x,y)) != (isBlocked(x,y-1) || isBlocked(x-1,y));
     }
 
     inline bool topRightOfBlockedTile(int x, int y) const {

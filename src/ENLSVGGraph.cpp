@@ -25,7 +25,7 @@ ENLSVGGraph::ENLSVGGraph(const Grid& grid, const LineOfSightScanner& scanner):
         int cx = vertices[i].x;
         int cy = vertices[i].y;
 
-        scanner.computeAllDirNeighbours(scannerStacks, cx, cy);
+        scanner.computeTautDirNeighbours(scannerStacks, cx, cy);
         std::vector<GridVertex>& neighbours = scannerStacks.neighbours;
 
         std::vector<OutgoingEdge>& edgeList = edgeLists[i];
