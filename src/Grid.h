@@ -26,6 +26,22 @@ public:
         return (isBlocked(x,y) || isBlocked(x+1,y+1)) != (isBlocked(x+1,y) || isBlocked(x,y+1));
     }
 
+    inline bool topRightOfBlockedTile(int x, int y) const {
+        return isBlocked(x-1, y-1);
+    }
+
+    inline bool topLeftOfBlockedTile(int x, int y) const {
+        return isBlocked(x, y-1);
+    }
+
+    inline bool bottomRightOfBlockedTile(int x, int y) const {
+        return isBlocked(x-1, y);
+    }
+
+    inline bool bottomLeftOfBlockedTile(int x, int y) const {
+        return isBlocked(x, y);
+    }
+
     static inline double euclideanDistance(int x1, int y1, int x2, int y2) {
         int dx = x2-x1;
         int dy = y2-y1;

@@ -19,6 +19,38 @@ Fraction operator+(const Fraction& o, const Fraction& o2) {
 Fraction operator-(const Fraction& o, const Fraction& o2) {
     return Fraction(o.n*o2.d - o2.n*o.d, o.d*o2.d);
 }
+    
+Fraction operator*(const Fraction& o, int o2) {
+    return Fraction(o.n*o2, o.d);
+}
+
+Fraction operator/(const Fraction& o, int o2) {
+    return Fraction(o.n, o.d*o2);
+}
+
+Fraction operator+(const Fraction& o, int o2) {
+    return Fraction(o.n + o2*o.d, o.d);
+}
+
+Fraction operator-(const Fraction& o, int o2) {
+    return Fraction(o.n - o2*o.d, o.d);
+}
+
+Fraction operator*(int o, const Fraction& o2) {
+    return Fraction(o*o2.n, o2.d);
+}
+
+Fraction operator/(int o, const Fraction& o2) {
+    return Fraction(o*o2.d, o2.n);
+}
+
+Fraction operator+(int o, const Fraction& o2) {
+    return Fraction(o*o2.d + o2.n, o2.d);
+}
+
+Fraction operator-(int o, const Fraction& o2) {
+    return Fraction(o*o2.d - o2.n, o2.d);
+}
 
 ostream& operator<< (ostream& stream, Fraction& obj) {
     return stream << obj.toString();

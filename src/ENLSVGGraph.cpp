@@ -20,11 +20,13 @@ ENLSVGGraph::ENLSVGGraph(const Grid& grid, const LineOfSightScanner& scanner):
 
     // Initialise SVG edges
     edgeLists.resize(vertices.size());
+    ScannerStacks scannerStacks;
     for (size_t i=0;i<vertices.size();++i) {
         int cx = vertices[i].x;
         int cy = vertices[i].y;
 
-        std::vector<GridVertex> neighbours = scanner.computeTautNeighbours(cx, cy);
+        scanner.computeAllDirNeighbours(scannerStacks, cx, cy);
+        std::vector<GridVertex>& neighbours = scannerStacks.neighbours;
 
         std::vector<OutgoingEdge>& edgeList = edgeLists[i];
         edgeList.resize(neighbours.size());

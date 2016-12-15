@@ -8,11 +8,7 @@ using namespace std;
 struct Fraction {
     int n, d;
 
-    inline Fraction() {
-        // Invalid
-        this->n = 0;
-        this->d = 0;
-    }
+    inline Fraction() {}
         
     inline Fraction(int n, int d) {
         init(n, d);
@@ -20,17 +16,6 @@ struct Fraction {
 
     inline Fraction(int n) {
         init(n, 1);
-    }
-
-    // Copy constructor
-    inline Fraction (const Fraction &o) {
-        if (o.d == 0) {
-            // Invalid fraction copy.
-            this->n = 0;
-            this->d = 0;
-            return;
-        }
-        init(o.n, o.d);
     }
 
     inline void init(int n, int d) {
@@ -65,6 +50,19 @@ struct Fraction {
         return a == 0 ? b : gcd(b%a, a);
     }
 
+    /**
+     * @return largest integer leq to this.
+     */
+    inline int floor() const {
+        return n > 0 ? n/d : (n+1)/d - 1;
+    }
+    
+    /**
+     * @return smallest integer geq to this.
+     */
+    inline int ceil() const {
+        return n > 0 ? (n-1)/d + 1 : n/d;
+    }
 
     inline Fraction& operator*=(const Fraction& o) {
         init(n*o.n, d*o.d);
@@ -112,6 +110,11 @@ struct Fraction {
         return !(*this < o);
     }
 
+    inline Fraction multiplyDivide(int multiply, int divide) const {
+        return Fraction((long)n*multiply, (long)d*divide);
+    }
+    
+
     inline bool isPositive() const {
         return n > 0;
     }
@@ -128,12 +131,23 @@ struct Fraction {
         return d == 0;
     }
 
+    inline bool isWholeNumber() const {
+        return d == 1;
+    }
 };
 
 Fraction operator*(const Fraction& o, const Fraction& o2);
 Fraction operator/(const Fraction& o, const Fraction& o2);
 Fraction operator+(const Fraction& o, const Fraction& o2);
 Fraction operator-(const Fraction& o, const Fraction& o2);
+Fraction operator*(const Fraction& o, int o2);
+Fraction operator/(const Fraction& o, int o2);
+Fraction operator+(const Fraction& o, int o2);
+Fraction operator-(const Fraction& o, int o2);
+Fraction operator*(int o, const Fraction& o2);
+Fraction operator/(int o, const Fraction& o2);
+Fraction operator+(int o, const Fraction& o2);
+Fraction operator-(int o, const Fraction& o2);
 ostream& operator<< (ostream& stream, Fraction& obj);
 
 Fraction parseFraction(string s);
