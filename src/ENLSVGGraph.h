@@ -6,16 +6,16 @@
 class Grid;
 class LineOfSightScanner;
 
+struct OutgoingEdge {
+    int dest;
+    double weight;
+
+    OutgoingEdge() {}
+    //OutgoingEdge(int dest, double weight): dest(dest), weight(weight) {}
+};
+
 class ENLSVGGraph {
 public:
-    struct OutgoingEdge {
-        int dest;
-        double weight;
-
-        OutgoingEdge() {}
-        //OutgoingEdge(int dest, double weight): dest(dest), weight(weight) {}
-    };
-
     ENLSVGGraph(const Grid& grid, const LineOfSightScanner& scanner);
 
     const int sizeX;

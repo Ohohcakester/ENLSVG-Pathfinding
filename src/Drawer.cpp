@@ -112,9 +112,17 @@ void Drawer::drawGrid(const Grid& grid) {
     }
 }
 
-
 void Drawer::drawVisibilityGraph(const ENLSVGGraph& graph) {
     TGAImage& img = *imgPtr;
 
-
+    Colour c = Colours::RED;
+    const std::vector<GridVertex>& vertices = graph.vertices;
+    for (size_t i=0; i<vertices.size(); ++i) {
+        const GridVertex& u = vertices[i];
+        const std::vector<OutgoingEdge>& edgeList = graph.edgeLists[i];
+        for (size_t j=0; j<edgeList.size(); ++j) {
+            const GridVertex& v = vertices[edgeList[j].dest];
+            drawLine(u.x, u.y, v.x, v.y, c);
+        }
+    }
 }
