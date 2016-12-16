@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include "fraction.h"
+#include "Fraction.h"
 using namespace std;
     
 Fraction operator*(const Fraction& o, const Fraction& o2) {
