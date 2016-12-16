@@ -124,7 +124,7 @@ void Drawer::drawGrid(const Grid& grid) {
 void Drawer::drawVisibilityGraph(const ENLSVGGraph& graph) {
     TGAImage& img = *imgPtr;
 
-    Colour c = Colours::RED;
+    Colour c = Colours::LIME;
     const std::vector<GridVertex>& vertices = graph.vertices;
     for (size_t i=0; i<vertices.size(); ++i) {
         const GridVertex& u = vertices[i];
@@ -133,5 +133,34 @@ void Drawer::drawVisibilityGraph(const ENLSVGGraph& graph) {
             const GridVertex& v = vertices[edgeList[j].dest];
             drawLine(u.x*scale, u.y*scale, v.x*scale, v.y*scale, c);
         }
+    }
+}
+
+
+void Drawer::drawPoint(int px, int py) {
+    const Colour& c1 = Colours::BROWN;
+    drawCircle(px*scale, py*scale, 6, c1);
+
+    const Colour& c2 = Colours::YELLOW;
+    drawCircle(px*scale, py*scale, 4, c2);
+}
+
+
+void Drawer::drawPath(const Path& path) {
+    if (path.size() == 0) return;
+
+    int prevX = path[0].x;
+    int prevY = path[0].y;
+    int currX, currY;
+
+    const Colour& c = Colours::BLUE;
+    for (size_t i=1; i<path.size(); ++i) {
+        currX = path[i].x;
+        currY = path[i].y;
+
+        drawLine(prevX*scale, prevY*scale, currX*scale, currY*scale, c);
+        
+        prevX = currX;
+        prevY = currY;
     }
 }

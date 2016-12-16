@@ -2,6 +2,7 @@
 #define _DRAWER_H_
 
 #include <string>
+#include "PathfindingDataTypes.h"
 class Grid;
 class TGAImage;
 class ENLSVGGraph;
@@ -15,6 +16,8 @@ public:
     void save(const std::string& filename);
     void drawGrid(const Grid& grid);
     void drawVisibilityGraph(const ENLSVGGraph& graph);
+    void drawPoint(int px, int py);
+    void drawPath(const Path& path);
 
     void drawLine(int x1 ,int y1, int x2, int y2, const Colour& c);
     void drawCircle(int cx, int cy, int r, const Colour& c);
