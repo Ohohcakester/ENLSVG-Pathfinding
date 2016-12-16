@@ -59,8 +59,11 @@ public:
 	//Set all pixels at once
 	void setAllPixels(Colour *pixels);
 
-	//set individual pixels
-	void setPixel(Colour inputcolor, int xposition, int yposition);
+    //set individual pixels
+    void setPixel(Colour inputcolor, int xposition, int yposition);
+
+    //set individual pixels, includes boundary check.
+    void setPixelSafe(Colour inputcolor, int xposition, int yposition);
 
 	void WriteImage(string filename);
 

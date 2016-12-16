@@ -24,7 +24,13 @@ void TGAImage::setAllPixels(Colour *pixels) {
 
 //Set indivdual pixels
 void TGAImage::setPixel(Colour inputcolor, int x, int y) {
-	m_pixels[convert2dto1d(x,y)] = inputcolor;
+  m_pixels[convert2dto1d(x,y)] = inputcolor;
+}
+
+//set individual pixels, includes boundary check.
+void TGAImage::setPixelSafe(Colour inputcolor, int x, int y) {
+  if (x < 0 || y < 0 || x >= m_width || y >= m_height) return;
+  m_pixels[convert2dto1d(x,y)] = inputcolor;
 }
 
 //Convert 2d array indexing to 1d indexing

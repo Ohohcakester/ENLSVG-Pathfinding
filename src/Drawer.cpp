@@ -16,7 +16,7 @@ void Drawer::save(const std::string& filename) {
     imgPtr->WriteImage(filename);
 }
 
-void Drawer::drawLine(int x1 ,int y1, int x2, int y2, Colour& c) {
+void Drawer::drawLine(int x1 ,int y1, int x2, int y2, const Colour& c) {
     TGAImage& img = *imgPtr;
     
     int dy = y2 - y1;
@@ -44,14 +44,14 @@ void Drawer::drawLine(int x1 ,int y1, int x2, int y2, Colour& c) {
         while (x1 != x2) {
             f += dy;
             if (f >= dx) {
-                img.setPixel(c, x1 + offsetX, y1 + offsetY);
+                img.setPixelSafe(c, x1 + offsetX, y1 + offsetY);
                 y1 += signY;
                 f -= dx;
             }
-            if (f != 0) img.setPixel(c, x1 + offsetX, y1 + offsetY);
+            if (f != 0) img.setPixelSafe(c, x1 + offsetX, y1 + offsetY);
             if (dy == 0) {
-                img.setPixel(c, x1 + offsetX, y1);
-                img.setPixel(c, x1 + offsetX, y1 - 1);
+                img.setPixelSafe(c, x1 + offsetX, y1);
+                img.setPixelSafe(c, x1 + offsetX, y1 - 1);
             }
 
             x1 += signX;
@@ -61,14 +61,14 @@ void Drawer::drawLine(int x1 ,int y1, int x2, int y2, Colour& c) {
         while (y1 != y2) {
             f += dx;
             if (f >= dy) {
-                img.setPixel(c, x1 + offsetX, y1 + offsetY);
+                img.setPixelSafe(c, x1 + offsetX, y1 + offsetY);
                 x1 += signX;
                 f -= dy;
             }
-            if (f != 0) img.setPixel(c, x1 + offsetX, y1 + offsetY);
+            if (f != 0) img.setPixelSafe(c, x1 + offsetX, y1 + offsetY);
             if (dx == 0) {
-                img.setPixel(c, x1, y1 + offsetY);
-                img.setPixel(c, x1 - 1, y1 + offsetY);
+                img.setPixelSafe(c, x1, y1 + offsetY);
+                img.setPixelSafe(c, x1 - 1, y1 + offsetY);
             }
 
             y1 += signY;
@@ -76,27 +76,27 @@ void Drawer::drawLine(int x1 ,int y1, int x2, int y2, Colour& c) {
     }
 }
 
-void Drawer::drawCircle(int cx, int cy, int r, Colour& c) {
+void Drawer::drawCircle(int cx, int cy, int r, const Colour& c) {
     TGAImage& img = *imgPtr;
     
     for (int y=0;y<=r;++y) {
         for (int x=0;x<=r;++x) {
             if (x*x+y*y <= r*r) {
-                img.setPixel(c,cx+x,cy+y);
-                img.setPixel(c,cx-x,cy+y);
-                img.setPixel(c,cx+x,cy-y);
-                img.setPixel(c,cx-x,cy-y);
+                img.setPixelSafe(c,cx+x,cy+y);
+                img.setPixelSafe(c,cx-x,cy+y);
+                img.setPixelSafe(c,cx+x,cy-y);
+                img.setPixelSafe(c,cx-x,cy-y);
             }
         }
     }
 }
 
-void Drawer::drawRect(int x1, int y1, int x2, int y2, Colour& c) {
+void Drawer::drawRect(int x1, int y1, int x2, int y2, const Colour& c) {
     TGAImage& img = *imgPtr;
 
     for (int y=y1;y<y2;++y) {
         for (int x=x1;x<=x2;++x) {
-            img.setPixel(c,x,y);
+            img.setPixelSafe(c,x,y);
         }
     }
 }
