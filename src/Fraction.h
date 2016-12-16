@@ -14,8 +14,11 @@ struct Fraction {
         init(n, d);
     }
 
-    inline Fraction(int n) {
-        init(n, 1);
+    inline Fraction(int n): n(n), d(1) {}
+
+    inline void init(int n) {
+        this->n = n;
+        this->d = 1;
     }
 
     inline void init(int n, int d) {
