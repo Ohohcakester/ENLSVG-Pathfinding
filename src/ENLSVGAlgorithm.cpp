@@ -20,16 +20,16 @@ ENLSVGAlgorithm::ENLSVGAlgorithm(const Grid& grid):
 }
 
 
-Path ENLSVGAlgorithm::computeSVGPath(const GridVertex& start, const GridVertex& goal) {
+Path ENLSVGAlgorithm::computeSVGPath(const int sx, const int sy, const int ex, const int ey) {
     // START: SPECIAL CASES - Handle special cases first.
-    if (start.x == goal.x && start.y == goal.y) {
+    if (sx == ex && sy == ey) {
         Path path;
-        path.push_back(GridVertex(start.x, start.y));
+        path.push_back(GridVertex(sx, sy));
         return path;
-    } else if (grid.lineOfSight(start.x, start.y, goal.x, goal.y)) {
+    } else if (grid.lineOfSight(sx, sy, ex, ey)) {
         Path path;
-        path.push_back(GridVertex(start.x, start.y));
-        path.push_back(GridVertex(goal.x, goal.y));
+        path.push_back(GridVertex(sx, sy));
+        path.push_back(GridVertex(ex, ey));
         return path;
     }
     // END: SPECIAL CASES
@@ -39,12 +39,6 @@ Path ENLSVGAlgorithm::computeSVGPath(const GridVertex& start, const GridVertex& 
     std::vector<AStarData> nodes;
     nodes.resize(nNodes);
     IndirectHeap pq(nNodes);
-
-    const int sx = start.x;
-    const int sy = start.y;
-    const int ex = goal.x;
-    const int ey = goal.y;
-    
 
     double goalDistance = POS_INF;
     int goalParent = -1;
@@ -116,19 +110,20 @@ Path ENLSVGAlgorithm::computeSVGPath(const GridVertex& start, const GridVertex& 
         }
     }
 
-    return getPath(nodes, goalParent, start, goal);
+    return getPath(nodes, goalParent, sx, sy, ex, ey);
 }
 
 
-Path ENLSVGAlgorithm::getPath(const std::vector<AStarData>& nodes, int goalParent, const GridVertex& start, const GridVertex& goal) const {
+Path ENLSVGAlgorithm::getPath(const std::vector<AStarData>& nodes, int goalParent,
+const int sx, const int sy, const int ex, const int ey) const {
     Path path;
 
     // no path found.
     if (goalParent == -1) return path;
 
     // If Goal vertex is not a VG vertex:
-    if (graph.nodeIndexes[goal.y][goal.x] == -1) {
-        path.push_back(goal);
+    if (graph.nodeIndexes[ey][ex] == -1) {
+        path.push_back(GridVertex(ex,ey));
     }
 
     int curr = goalParent;
@@ -138,8 +133,8 @@ Path ENLSVGAlgorithm::getPath(const std::vector<AStarData>& nodes, int goalParen
     }
 
     // If Start vertex is not a VG vertex:
-    if (graph.nodeIndexes[start.y][start.x] == -1) {
-        path.push_back(start);
+    if (graph.nodeIndexes[sy][sx] == -1) {
+        path.push_back(GridVertex(sx,sy));
     }
 
     std::reverse(path.begin(), path.end());

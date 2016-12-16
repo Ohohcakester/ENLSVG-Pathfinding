@@ -19,8 +19,8 @@ public:
 
     ENLSVGAlgorithm(const Grid& grid);
 
-    Path computePath(const GridVertex& start, const GridVertex& end);
-    Path computeSVGPath(const GridVertex& start, const GridVertex& end);
+    Path computePath(const int sx, const int sy, const int ex, const int ey);
+    Path computeSVGPath(const int sx, const int sy, const int ex, const int ey);
 
     inline double heuristic(int index, int ex, int ey) {
         int dx = graph.vertices[index].x - ex;
@@ -29,7 +29,7 @@ public:
     }
 
 private:
-    Path getPath(const std::vector<AStarData>& nodes, int goalParent, const GridVertex& start, const GridVertex& goal) const;
+    Path getPath(const std::vector<AStarData>& nodes, int goalParent, const int sx, const int sy, const int ex, const int ey) const;
 
 };
 
