@@ -9,7 +9,7 @@ class Colour;
 
 class Drawer {
 public:
-    Drawer(const Grid& grid);
+    Drawer(const Grid& grid, int scale=1);
     ~Drawer();
 
     void save(const std::string& filename);
@@ -20,9 +20,14 @@ public:
     void drawCircle(int cx, int cy, int r, Colour& c);
     void drawRect(int x1, int y1, int x2, int y2, Colour& c);
 
+    // Don't change the order of variable declaration!
+    const int gridSizeX;
+    const int gridSizeY;
+    const int imgSizeX;
+    const int imgSizeY;
+    const int scale;
+private:
     TGAImage* imgPtr;
-    const int sizeX;
-    const int sizeY;
 };
 
 

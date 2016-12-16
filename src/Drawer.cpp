@@ -3,8 +3,9 @@
 #include "Image.h"
 #include "ENLSVGGraph.h"
 
-Drawer::Drawer(const Grid& grid): sizeX(grid.sizeX), sizeY(grid.sizeY) {
-    imgPtr = new TGAImage(sizeX, sizeY);
+Drawer::Drawer(const Grid& grid, int scale)
+: gridSizeX(grid.sizeX), gridSizeY(grid.sizeY), imgSizeX(grid.sizeX*scale),
+imgSizeY(grid.sizeY*scale), scale(scale), imgPtr(new TGAImage(imgSizeX, imgSizeY)) {
 }
 
 Drawer::~Drawer() {
@@ -104,10 +105,18 @@ void Drawer::drawGrid(const Grid& grid) {
     TGAImage& img = *imgPtr;
 
     Colour c;
-    for (int y=0; y<sizeY; ++y) {
-        for (int x=0; x<sizeX; ++x) {
+    for (int y=0; y<gridSizeY; ++y) {
+        for (int x=0; x<gridSizeX; ++x) {
             c.r = c.g = c.b = (grid.blocked[y][x] ? 64 : 255);
-            img.setPixel(c,x,y);
+            int x1 = x*scale;
+            int x2 = x1+scale;
+            int y1 = y*scale;
+            int y2 = y1+scale;
+            for (int j=y1;j<y2;++j) {
+                for (int i=x1;i<x2;++i) {
+                    img.setPixel(c,i,j);
+                }
+            }
         }
     }
 }
@@ -122,7 +131,7 @@ void Drawer::drawVisibilityGraph(const ENLSVGGraph& graph) {
         const std::vector<OutgoingEdge>& edgeList = graph.edgeLists[i];
         for (size_t j=0; j<edgeList.size(); ++j) {
             const GridVertex& v = vertices[edgeList[j].dest];
-            drawLine(u.x, u.y, v.x, v.y, c);
+            drawLine(u.x*scale, u.y*scale, v.x*scale, v.y*scale, c);
         }
     }
 }
