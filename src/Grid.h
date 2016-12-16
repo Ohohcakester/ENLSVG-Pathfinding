@@ -48,6 +48,65 @@ public:
         return sqrt(dx*dx+dy*dy);
     }
 
+    inline bool lineOfSight(int x1, int y1, int x2, int y2) const {
+        int dy = y2 - y1;
+        int dx = x2 - x1;
+
+        int f = 0;
+
+        int signY = 1;
+        int signX = 1;
+        int offsetX = 0;
+        int offsetY = 0;
+        
+        if (dy < 0) {
+            dy *= -1;
+            signY = -1;
+            offsetY = -1;
+        }
+        if (dx < 0) {
+            dx *= -1;
+            signX = -1;
+            offsetX = -1;
+        }
+        
+        if (dx >= dy) {
+            while (x1 != x2) {
+                f += dy;
+                if (f >= dx) {
+                    if (isBlocked(x1 + offsetX, y1 + offsetY))
+                        return false;
+                    y1 += signY;
+                    f -= dx;
+                }
+                if (f != 0 && isBlocked(x1 + offsetX, y1 + offsetY))
+                    return false;
+                if (dy == 0 && isBlocked(x1 + offsetX, y1) && isBlocked(x1 + offsetX, y1 - 1))
+                    return false;
+                
+                x1 += signX;
+            }
+        }
+        else {
+            while (y1 != y2) {
+                f += dx;
+                if (f >= dy) {
+                    if (isBlocked(x1 + offsetX, y1 + offsetY))
+                        return false;
+                    x1 += signX;
+                    f -= dy;
+                }
+                if (f != 0 && isBlocked(x1 + offsetX, y1 + offsetY))
+                    return false;
+                if (dx == 0 && isBlocked(x1, y1 + offsetY) && isBlocked(x1 - 1, y1 + offsetY))
+                    return false;
+                
+                y1 += signY;
+            }
+        }
+        return true;
+    }
+
     void printGrid() const;
 };
 
