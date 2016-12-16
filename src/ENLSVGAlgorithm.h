@@ -12,10 +12,11 @@ public:
 
     Path computePath(const GridVertex& start, const GridVertex& end);
 
-    const ENLSVGGraph graph;
 private:
     const LineOfSightScanner& scanner;
     const Grid& grid;
+public:
+    const ENLSVGGraph graph; //Note: This must be defined after scanner and grid.
 };
 
 
