@@ -7,8 +7,8 @@ ENLSVGGraph::ENLSVGGraph(const Grid& grid, const LineOfSightScanner& scanner):
     sizeX(grid.sizeX), sizeY(grid.sizeY), scanner(scanner) {
 
     // Initialise vertices (outer corners).
-    nodeIndexes.resize(sizeY);
-    for (int y=0;y<=sizeY;++y) nodeIndexes[y].resize(sizeX, -1);
+    nodeIndexes.resize(sizeY+1);
+    for (int y=0;y<=sizeY;++y) nodeIndexes[y].resize(sizeX+1, -1);
     for (int y=0;y<=sizeY;++y) {
         for (int x=0;x<=sizeX;++x) {
             if (grid.isOuterCorner(x,y)) {
