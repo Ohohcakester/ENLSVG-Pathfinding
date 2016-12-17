@@ -66,7 +66,7 @@ Path ENLSVGAlgorithm::computeSVGPath(const int sx, const int sy, const int ex, c
         const int goalIndex = graph.nodeIndexes[ey][ex];
         if (goalIndex == -1) {
             // Case 1: goal vertex is not a VG vertex.
-            scanner.computeAllDirNeighbours(data, sx, sy);
+            scanner.computeAllDirNeighbours(data, ex, ey);
             const std::vector<GridVertex>& neighbours = data.neighbours;
             for (size_t i=0; i<neighbours.size(); ++i) {
                 const GridVertex& vn = neighbours[i];
@@ -80,12 +80,11 @@ Path ENLSVGAlgorithm::computeSVGPath(const int sx, const int sy, const int ex, c
     } // END: INITIALISATION
 
     while (pq.size() > 0) {
+        if (goalDistance <= pq.getMinValue()) {
+            break; // Reached Goal.
+        }
         int curr = pq.popMinIndex();
         double currDistance = nodes[curr].distance;
-        if (goalDistance <= currDistance) {
-            // reached goal.
-            break;
-        }
         nodes[curr].visited = true;
 
         const std::vector<OutgoingEdge>& neighbours = graph.edgeLists[curr];
