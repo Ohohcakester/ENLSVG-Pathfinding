@@ -2,7 +2,7 @@
 #include <iostream>
 
 // Runs in constant time if reinitialising heap of same size.
-void IndirectHeap::initialise(int capacity, float defaultKey) {
+void IndirectHeap::initialise(int capacity, double defaultKey) {
     this->defaultKey = defaultKey;
 
     if (ticketCheck.size() != capacity) {
@@ -37,7 +37,7 @@ IndirectHeap::IndirectHeap(int capacity): heapSize(0) {
 
 
 // Runtime: O(lgn)
-void IndirectHeap::decreaseKey(int outIndex, float newKey) {
+void IndirectHeap::decreaseKey(int outIndex, double newKey) {
     // Assume newKey < old key
     int inIndex = getIn(outIndex);
 

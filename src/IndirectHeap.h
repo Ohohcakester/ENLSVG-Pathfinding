@@ -8,23 +8,29 @@ const double POS_INF = std::numeric_limits<double>::infinity();
 class IndirectHeap {
 
 public:
-    void initialise(int size, float defaultKey);
+    void initialise(int size, double defaultKey);
     IndirectHeap(int capacity);
-    void decreaseKey(int outIndex, float newKey);
+    void decreaseKey(int outIndex, double newKey);
     int popMinIndex();
 
 private:
-    std::vector<float> keyList;
+    std::vector<double> keyList;
     std::vector<int> inList;
     std::vector<int> outList;
     int heapSize;
         
-    float defaultKey = POS_INF;
+    double defaultKey = POS_INF;
 
     std::vector<int> ticketCheck;
     int ticketNumber = 0;
+
+public:
+    inline double getMinValue() const {
+        return getKey(0);
+    }
     
-    inline float getKey(int index) const {
+private:
+    inline double getKey(int index) const {
         return ticketCheck[index] == ticketNumber ? keyList[index] : defaultKey;
     }
     
@@ -36,7 +42,7 @@ private:
         return ticketCheck[index] == ticketNumber ? outList[index] : index;
     }
     
-    inline void setKey(int index, float value) {
+    inline void setKey(int index, double value) {
         if (ticketCheck[index] != ticketNumber) {
             keyList[index] = value;
             inList[index] = index;
@@ -98,7 +104,7 @@ private:
      * swap integers in list
      */
     inline void swapKey(int i1, int i2) {
-        float temp = getKey(i1);
+        double temp = getKey(i1);
         setKey(i1,getKey(i2));
         setKey(i2,temp);
     }
@@ -147,11 +153,6 @@ private:
             rightChild = 2*index+2;
             smallerChild = smallerNode(leftChild, rightChild);
         }
-    }
-
-    
-    inline float getMinValue() const {
-        return getKey(0);
     }
 
     /*
