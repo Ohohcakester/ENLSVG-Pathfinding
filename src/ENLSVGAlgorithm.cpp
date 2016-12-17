@@ -54,8 +54,8 @@ Path ENLSVGAlgorithm::computeSVGPath(const int sx, const int sy, const int ex, c
                 int neighbour = graph.nodeIndexes[vn.y][vn.x];
 
                 double dist = grid.euclideanDistance(sx, sy, vn.x, vn.y);
-                pq.decreaseKey(neighbour, 0);
-                nodes[neighbour].distance = 0;
+                nodes[neighbour].distance = dist;
+                pq.decreaseKey(neighbour, dist + heuristic(neighbour, ex, ey));
             }
         } else {
             // Case 2: Start vertex is a VG vertex.
