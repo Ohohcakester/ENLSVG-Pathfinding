@@ -3,16 +3,16 @@
 
 #include "PathfindingDataTypes.h"
 #include "ENLSVGGraph.h"
+#include "LineOfSightScanner.h"
 #include <cmath>
 class Grid;
-class LineOfSightScanner;
 struct AStarData;
 
 class ENLSVGAlgorithm {
 
 private:
-    const LineOfSightScanner& scanner;
     const Grid& grid;
+    const LineOfSightScanner scanner;
 public:
     const ENLSVGGraph graph; //Note: This must be defined after scanner and grid.
 
