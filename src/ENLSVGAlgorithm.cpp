@@ -44,9 +44,9 @@ Path ENLSVGAlgorithm::computeSVGPath(const int sx, const int sy, const int ex, c
     int goalParent = -1;
     { // START: INITIALISATION
         ScannerStacks data;
-        const int startIndex = graph.nodeIndexes[sy][sx];
-        if (startIndex == -1) {
-            // Case 1: Start vertex is not a VG vertex.
+        {
+            const int startIndex = graph.nodeIndexes[sy][sx];
+            // Add all visible neighbours of start vertex
             scanner.computeAllDirNeighbours(data, sx, sy);
             const std::vector<GridVertex>& neighbours = data.neighbours;
             for (size_t i=0; i<neighbours.size(); ++i) {
@@ -57,15 +57,15 @@ Path ENLSVGAlgorithm::computeSVGPath(const int sx, const int sy, const int ex, c
                 nodes[neighbour].distance = dist;
                 pq.decreaseKey(neighbour, dist + heuristic(neighbour, ex, ey));
             }
-        } else {
-            // Case 2: Start vertex is a VG vertex.
-            pq.decreaseKey(startIndex, 0);
-            nodes[startIndex].distance = 0;    
+            if (startIndex != -1) {
+                // IF start vertex is a VG node, add it too.
+                pq.decreaseKey(startIndex, 0);
+                nodes[startIndex].distance = 0;    
+            }
         }
-
-        const int goalIndex = graph.nodeIndexes[ey][ex];
-        if (goalIndex == -1) {
-            // Case 1: goal vertex is not a VG vertex.
+        {
+            const int goalIndex = graph.nodeIndexes[ey][ex];
+            // Add all visible neighbours of goal vertex
             scanner.computeAllDirNeighbours(data, ex, ey);
             const std::vector<GridVertex>& neighbours = data.neighbours;
             for (size_t i=0; i<neighbours.size(); ++i) {
@@ -73,9 +73,10 @@ Path ENLSVGAlgorithm::computeSVGPath(const int sx, const int sy, const int ex, c
                 int neighbour = graph.nodeIndexes[vn.y][vn.x];
                 nodes[neighbour].edgeWeightToGoal = grid.euclideanDistance(vn.x, vn.y, ex, ey);
             }
-        } else {
-            // Case 2: goal vertex is a VG vertex.
-            nodes[goalIndex].edgeWeightToGoal = 0;
+            if (goalIndex != -1) {
+                // IF goal vertex is a VG node, add it too.
+                nodes[goalIndex].edgeWeightToGoal = 0;
+            }
         }
     } // END: INITIALISATION
 
@@ -122,8 +123,8 @@ const int sx, const int sy, const int ex, const int ey) const {
     // no path found.
     if (goalParent == -1) return path;
 
-    // If Goal vertex is not a VG vertex:
-    if (graph.nodeIndexes[ey][ex] == -1) {
+    // If the last vertex is not equal to the goal vertex.
+    if (graph.nodeIndexes[ey][ex] != goalParent) {
         path.push_back(GridVertex(ex,ey));
     }
 
@@ -133,8 +134,8 @@ const int sx, const int sy, const int ex, const int ey) const {
         curr = nodes[curr].parent;
     }
 
-    // If Start vertex is not a VG vertex:
-    if (graph.nodeIndexes[sy][sx] == -1) {
+    // If Start vertex is not equal to the first vertex.
+    if (sx != path.back().x || sy != path.back().y) {
         path.push_back(GridVertex(sx,sy));
     }
 
