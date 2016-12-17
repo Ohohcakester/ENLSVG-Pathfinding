@@ -84,6 +84,7 @@ Path ENLSVGAlgorithm::computeSVGPath(const int sx, const int sy, const int ex, c
             break; // Reached Goal.
         }
         int curr = pq.popMinIndex();
+        if (nodes[curr].visited) continue;
         double currDistance = nodes[curr].distance;
         nodes[curr].visited = true;
 
