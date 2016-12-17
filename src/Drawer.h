@@ -18,6 +18,7 @@ public:
     void drawVisibilityGraph(const ENLSVGGraph& graph);
     void drawPoint(int px, int py);
     void drawPath(const Path& path);
+    void drawParentPointers(const ParentPtrs& ptrs);
 
     void drawLine(int x1 ,int y1, int x2, int y2, const Colour& c);
     void drawCircle(int cx, int cy, int r, const Colour& c);

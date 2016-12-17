@@ -20,7 +20,7 @@ ENLSVGAlgorithm::ENLSVGAlgorithm(const Grid& grid):
 }
 
 
-Path ENLSVGAlgorithm::computeSVGPath(const int sx, const int sy, const int ex, const int ey) {
+Path ENLSVGAlgorithm::computeSVGPath(const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs) {
     // START: SPECIAL CASES - Handle special cases first.
     if (sx == ex && sy == ey) {
         Path path;
@@ -109,6 +109,7 @@ Path ENLSVGAlgorithm::computeSVGPath(const int sx, const int sy, const int ex, c
         }
     }
 
+    if (parentPtrs != nullptr) setParentPointers(nodes, goalParent, sx, sy, ex, ey, parentPtrs);
     return getPath(nodes, goalParent, sx, sy, ex, ey);
 }
 
@@ -138,4 +139,27 @@ const int sx, const int sy, const int ex, const int ey) const {
 
     std::reverse(path.begin(), path.end());
     return path;
+}
+
+void ENLSVGAlgorithm::setParentPointers(const std::vector<AStarData>& nodes,
+int goalParent, int sx, int sy, int ex, int ey, ParentPtrs* parentPtrs) {
+    
+    parentPtrs->goal = GridVertex(ex, ey);
+    parentPtrs->goalParent = graph.vertices[goalParent];
+
+    std::vector<GridVertex>& current = parentPtrs->current;
+    std::vector<GridVertex>& parent = parentPtrs->parent;
+
+    current.clear();
+    parent.clear();
+    for (size_t i=0; i<nodes.size(); ++i) {
+        if (nodes[i].distance == POS_INF) continue;
+
+        current.push_back(graph.vertices[i]);
+        if (nodes[i].parent != -1) {
+            parent.push_back(graph.vertices[nodes[i].parent]);
+        } else {
+            parent.push_back(GridVertex(sx, sy));
+        }
+    }
 }

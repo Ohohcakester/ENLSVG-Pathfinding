@@ -164,3 +164,26 @@ void Drawer::drawPath(const Path& path) {
         prevY = currY;
     }
 }
+
+
+void Drawer::drawParentPointers(const ParentPtrs& ptrs) {
+
+    const Colour& c = Colours::ORANGE;
+    int x1,y1,x2,y2;
+
+    x1 = ptrs.goal.x;
+    y1 = ptrs.goal.y;
+    x2 = ptrs.goalParent.x;
+    y2 = ptrs.goalParent.y;
+    drawLine(x1*scale, y1*scale, x2*scale, y2*scale, c);
+
+    const std::vector<GridVertex>& current = ptrs.current;
+    const std::vector<GridVertex>& parent = ptrs.parent;
+    for (size_t i=0; i<current.size(); ++i) {
+        x1 = current[i].x;
+        y1 = current[i].y;
+        x2 = parent[i].x;
+        y2 = parent[i].y;
+        drawLine(x1*scale, y1*scale, x2*scale, y2*scale, c);
+    }
+}

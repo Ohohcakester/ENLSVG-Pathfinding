@@ -19,14 +19,16 @@ int main() {
     const int sy = 10;
     const int ex = 190;
     const int ey = 130;
-    Path path = enlsvg.computeSVGPath(sx, sy, ex, ey);
+    ParentPtrs parentPtrs;
+    Path path = enlsvg.computeSVGPath(sx, sy, ex, ey, &parentPtrs);
 
     Drawer drawer(grid, 5);
     drawer.drawGrid(grid);
     drawer.drawVisibilityGraph(enlsvg.graph);
+    drawer.drawParentPointers(parentPtrs);
+    drawer.drawPath(path);
     drawer.drawPoint(sx, sy);
     drawer.drawPoint(ex, ey);
-    drawer.drawPath(path);
 
     drawer.save("outputImage.tga");
 }
