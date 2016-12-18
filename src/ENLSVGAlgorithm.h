@@ -4,6 +4,7 @@
 #include "PathfindingDataTypes.h"
 #include "ENLSVGGraph.h"
 #include "LineOfSightScanner.h"
+#include "Grid.h"
 #include <cmath>
 class Grid;
 struct AStarData;
@@ -26,6 +27,19 @@ public:
         int dx = graph.vertices[index].x - ex;
         int dy = graph.vertices[index].y - ey;
         return sqrt(dx*dx + dy*dy);
+    }
+
+    inline bool isTaut(int parent, int curr, int next) const {
+        if (parent == -1) return true;
+        const std::vector<GridVertex>& vertices = graph.vertices;
+        int x1 = vertices[parent].x;
+        int y1 = vertices[parent].y;
+        int x2 = vertices[curr].x;
+        int y2 = vertices[curr].y;
+        int x3 = vertices[next].x;
+        int y3 = vertices[next].y;
+
+        return grid.isTaut(x1, y1, x2, y2, x3, y3);
     }
 
 private:

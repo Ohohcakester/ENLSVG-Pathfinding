@@ -86,7 +86,8 @@ Path ENLSVGAlgorithm::computeSVGPath(const int sx, const int sy, const int ex, c
         }
         int curr = pq.popMinIndex();
         if (nodes[curr].visited) continue;
-        double currDistance = nodes[curr].distance;
+        const double currDistance = nodes[curr].distance;
+        const int currParent = nodes[curr].parent;
         nodes[curr].visited = true;
 
         const std::vector<OutgoingEdge>& neighbours = graph.edgeLists[curr];
@@ -95,7 +96,7 @@ Path ENLSVGAlgorithm::computeSVGPath(const int sx, const int sy, const int ex, c
             double weight = neighbours[i].weight;
 
             double destDistance = currDistance + weight;
-            if (destDistance < nodes[dest].distance) {
+            if (destDistance < nodes[dest].distance && isTaut(currParent, curr, dest)) {
                 nodes[dest].parent = curr;
                 nodes[dest].distance = destDistance;
                 pq.decreaseKey(dest, destDistance + heuristic(dest, ex, ey));
