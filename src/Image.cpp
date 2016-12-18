@@ -29,13 +29,13 @@ void TGAImage::setPixel(Colour inputcolor, int x, int y) {
 
 //set individual pixels, includes boundary check.
 void TGAImage::setPixelSafe(Colour inputcolor, int x, int y) {
-  if (x < 0 || y < 0 || x >= m_height || y >= m_width) return;
+  if (x < 0 || y < 0 || x >= m_width || y >= m_height) return;
   m_pixels[convert2dto1d(x,y)] = inputcolor;
 }
 
 //Convert 2d array indexing to 1d indexing
 int TGAImage::convert2dto1d(int x, int y) {
-	return m_width * x + y;
+	return m_width * y + x;
 }
 
 void TGAImage::WriteImage(string filename) {
@@ -58,15 +58,15 @@ void TGAImage::WriteImage(string filename) {
    	o.put(0);
    	o.put(0); 	o.put(0);           /* X origin */
    	o.put(0); 	o.put(0);           /* y origin */
-   	o.put((m_width & 0x00FF));
-   	o.put((m_width & 0xFF00) / 256);
+    o.put((m_width & 0x00FF));
+    o.put((m_width & 0xFF00) / 256);
    	o.put((m_height & 0x00FF));
    	o.put((m_height & 0xFF00) / 256);
    	o.put(32);                        /* 24 bit bitmap */
    	o.put(0);
    	
 	//Write the pixel data
-	for (int i=0;i<m_height*m_width;i++) {
+	for (int i=0;i<m_width*m_height;i++) {
 		o.put(m_pixels[i].b);
 		o.put(m_pixels[i].g);
 		o.put(m_pixels[i].r);
