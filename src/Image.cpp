@@ -5,42 +5,20 @@
  * https://danielbeard.wordpress.com/2011/06/06/image-saving-code-c/
  */
 
-//Default Constructor
-TGAImage::TGAImage() {}
+TGAImage::TGAImage(): m_width(0), m_height(0) {}
 
-//Overridden Constructor
-TGAImage::TGAImage(short width, short height) {
-    m_width = width;
-    m_height = height;
+TGAImage::TGAImage(short width, short height): m_width(width), m_height(height) {
     m_pixels = new Colour[m_width*m_height];
 }
 
-//Set all pixels at once
-void TGAImage::setAllPixels(Colour *pixels) {
-    m_pixels = pixels;
-}
-
-//Set indivdual pixels
-void TGAImage::setPixel(Colour inputcolor, int x, int y) {
-    m_pixels[convert2dto1d(x,y)] = inputcolor;
-}
-
-//set individual pixels, includes boundary check.
-void TGAImage::setPixelSafe(Colour inputcolor, int x, int y) {
-    if (x < 0 || y < 0 || x >= m_width || y >= m_height) return;
-    m_pixels[convert2dto1d(x,y)] = inputcolor;
-}
-
-//Convert 2d array indexing to 1d indexing
-int TGAImage::convert2dto1d(int x, int y) {
-	 return m_width * y + x;
+TGAImage::~TGAImage() {
+    delete[] m_pixels;
 }
 
 void TGAImage::WriteImage(string filename) {
 
     //Error checking
-    if (m_width <= 0 || m_height <= 0)
-    {
+    if (m_width <= 0 || m_height <= 0) {
         cout << "Image size is not set properly" << endl;
         return;
     }
@@ -50,17 +28,17 @@ void TGAImage::WriteImage(string filename) {
     //Write the header
     o.put(0);
     o.put(0);
-    o.put(2);                         /* uncompressed RGB */
-    o.put(0); 		o.put(0);
-    o.put(0); 	o.put(0);
+    o.put(2);                     /* uncompressed RGB */
+    o.put(0); o.put(0);
+    o.put(0); o.put(0);
     o.put(0);
-    o.put(0); 	o.put(0);           /* X origin */
-    o.put(0); 	o.put(0);           /* y origin */
+    o.put(0); o.put(0);           /* X origin */
+    o.put(0); o.put(0);           /* y origin */
     o.put((m_width & 0x00FF));
     o.put((m_width & 0xFF00) / 256);
     o.put((m_height & 0x00FF));
     o.put((m_height & 0xFF00) / 256);
-    o.put(32);                        /* 24 bit bitmap */
+    o.put(32);                    /* 24 bit bitmap */
     o.put(0);
 
     //Write the pixel data
