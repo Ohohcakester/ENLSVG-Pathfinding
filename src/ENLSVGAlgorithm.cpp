@@ -20,7 +20,7 @@ ENLSVGAlgorithm::ENLSVGAlgorithm(const Grid& grid):
 }
 
 
-Path ENLSVGAlgorithm::computeSVGPath(const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs) {
+Path ENLSVGAlgorithm::computeSVGPath(const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs) const {
     // START: SPECIAL CASES - Handle special cases first.
     if (sx == ex && sy == ey) {
         Path path;
@@ -144,7 +144,7 @@ const int sx, const int sy, const int ex, const int ey) const {
 }
 
 void ENLSVGAlgorithm::setParentPointers(const std::vector<AStarData>& nodes,
-int goalParent, int sx, int sy, int ex, int ey, ParentPtrs* parentPtrs) {
+int goalParent, int sx, int sy, int ex, int ey, ParentPtrs* parentPtrs) const {
     
     parentPtrs->goal = GridVertex(ex, ey);
     parentPtrs->goalParent = graph.vertices[goalParent];

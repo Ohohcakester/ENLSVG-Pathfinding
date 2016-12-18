@@ -19,10 +19,10 @@ public:
 
     ENLSVGAlgorithm(const Grid& grid);
 
-    Path computePath(const int sx, const int sy, const int ex, const int ey);
-    Path computeSVGPath(const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs = nullptr);
+    Path computePath(const int sx, const int sy, const int ex, const int ey) const;
+    Path computeSVGPath(const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs = nullptr) const;
 
-    inline double heuristic(int index, int ex, int ey) {
+    inline double heuristic(int index, int ex, int ey) const {
         int dx = graph.vertices[index].x - ex;
         int dy = graph.vertices[index].y - ey;
         return sqrt(dx*dx + dy*dy);
@@ -30,7 +30,7 @@ public:
 
 private:
     Path getPath(const std::vector<AStarData>& nodes, int goalParent, const int sx, const int sy, const int ex, const int ey) const;
-    void setParentPointers(const std::vector<AStarData>& nodes, int goalParent, int sx, int sy, int ex, int ey, ParentPtrs* parentPtrs);
+    void setParentPointers(const std::vector<AStarData>& nodes, int goalParent, int sx, int sy, int ex, int ey, ParentPtrs* parentPtrs) const;
 };
 
 
