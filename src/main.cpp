@@ -6,8 +6,8 @@
 #include "PathfindingDataTypes.h"
 
 int main() {
-    int sizeX = 200;
-    int sizeY = 200;
+    int sizeX = 203;
+    int sizeY = 154;
 
     Grid grid(sizeX, sizeY);
     //RandomGridGenerator::generateRandomGrid(grid, 0.5f);
@@ -15,10 +15,10 @@ int main() {
 
     ENLSVGAlgorithm enlsvg(grid);
 
-    const int sx = 10;
-    const int sy = 10;
-    const int ex = 190;
-    const int ey = 130;
+    const int sx = 31;
+    const int sy = 12;
+    const int ex = 179;
+    const int ey = 17;
     ParentPtrs parentPtrs;
     Path path = enlsvg.computeSVGPath(sx, sy, ex, ey, &parentPtrs);
 
