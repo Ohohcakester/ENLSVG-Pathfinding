@@ -56,7 +56,7 @@ public:
         m_pixels[convert2dto1d(x,y)] = inputcolor;
     }
 
-    void WriteImage(string filename);
+    void WriteImage(string filename) const;
 };
 
 

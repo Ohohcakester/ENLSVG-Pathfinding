@@ -15,7 +15,7 @@ TGAImage::~TGAImage() {
     delete[] m_pixels;
 }
 
-void TGAImage::WriteImage(string filename) {
+void TGAImage::WriteImage(string filename) const {
 
     //Error checking
     if (m_width <= 0 || m_height <= 0) {
