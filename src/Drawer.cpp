@@ -5,7 +5,7 @@
 
 Drawer::Drawer(const Grid& grid, int scale)
 : gridSizeX(grid.sizeX), gridSizeY(grid.sizeY), imgSizeX(grid.sizeX*scale),
-imgSizeY(grid.sizeY*scale), scale(scale), imgPtr(new TGAImage(imgSizeY, imgSizeX)) {
+imgSizeY(grid.sizeY*scale), scale(scale), imgPtr(new TGAImage(imgSizeX, imgSizeY)) {
 }
 
 Drawer::~Drawer() {
