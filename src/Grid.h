@@ -13,6 +13,7 @@ public:
     std::vector<std::vector<bool>> blocked;
 
     Grid(int sizeX, int sizeY);
+    void printGrid() const;
 
     inline bool isBlocked(int x, int y) const {
         return x < 0 || y < 0 || x >= sizeX || y >= sizeY || blocked[y][x];
@@ -107,7 +108,146 @@ public:
         return true;
     }
 
-    void printGrid() const;
+    // Checks whether the path (x1,y1),(x2,y2),(x3,y3) is taut.
+    inline bool isTaut(int x1, int y1, int x2, int y2, int x3, int y3) const {
+        if (x1 < x2) {
+            if (y1 < y2) {
+                return isTautFromBottomLeft(x1, y1, x2, y2, x3, y3);
+            } else if (y2 < y1) {
+                return isTautFromTopLeft(x1, y1, x2, y2, x3, y3);
+            } else { // y1 == y2
+                return isTautFromLeft(x1, y1, x2, y2, x3, y3);
+            }
+        } else if (x2 < x1) {
+            if (y1 < y2) {
+                return isTautFromBottomRight(x1, y1, x2, y2, x3, y3);
+            } else if (y2 < y1) {
+                return isTautFromTopRight(x1, y1, x2, y2, x3, y3);
+            } else { // y1 == y2
+                return isTautFromRight(x1, y1, x2, y2, x3, y3);
+            }
+        } else { // x2 == x1
+            if (y1 < y2) {
+                return isTautFromBottom(x1, y1, x2, y2, x3, y3);
+            } else if (y2 < y1) {
+                return isTautFromTop(x1, y1, x2, y2, x3, y3);
+            } else { // y1 == y2
+                std::cout << "ERROR: v == u?" << std::endl;
+                return true;
+            }
+        }
+    }
+
+private:
+    inline bool isTautFromBottomLeft(int x1, int y1, int x2, int y2, int x3, int y3) const {
+        if (x3 < x2 || y3 < y2) return false;
+        
+        int compareGradients = (y2-y1)*(x3-x2) - (y3-y2)*(x2-x1); // m1 - m2
+        if (compareGradients < 0) { // m1 < m2
+            return bottomRightOfBlockedTile(x2, y2);
+        } else if (compareGradients > 0) { // m1 > m2
+            return topLeftOfBlockedTile(x2, y2);
+        } else { // m1 == m2
+            return true;
+        }
+    }
+
+    
+    inline bool isTautFromTopLeft(int x1, int y1, int x2, int y2, int x3, int y3) const {
+        if (x3 < x2 || y3 > y2) return false;
+        
+        int compareGradients = (y2-y1)*(x3-x2) - (y3-y2)*(x2-x1); // m1 - m2
+        if (compareGradients < 0) { // m1 < m2
+            return bottomLeftOfBlockedTile(x2, y2);
+        } else if (compareGradients > 0) { // m1 > m2
+            return topRightOfBlockedTile(x2, y2);
+        } else { // m1 == m2
+            return true;
+        }
+    }
+    
+    inline bool isTautFromBottomRight(int x1, int y1, int x2, int y2, int x3, int y3) const {
+        if (x3 > x2 || y3 < y2) return false;
+
+        int compareGradients = (y2-y1)*(x3-x2) - (y3-y2)*(x2-x1); // m1 - m2
+        if (compareGradients < 0) { // m1 < m2
+            return topRightOfBlockedTile(x2, y2);
+        } else if (compareGradients > 0) { // m1 > m2
+            return bottomLeftOfBlockedTile(x2, y2);
+        } else { // m1 == m2
+            return true;
+        }
+    }
+
+    
+    inline bool isTautFromTopRight(int x1, int y1, int x2, int y2, int x3, int y3) const {
+        if (x3 > x2 || y3 > y2) return false;
+        
+        int compareGradients = (y2-y1)*(x3-x2) - (y3-y2)*(x2-x1); // m1 - m2
+        if (compareGradients < 0) { // m1 < m2
+            return topLeftOfBlockedTile(x2, y2);
+        } else if (compareGradients > 0) { // m1 > m2
+            return bottomRightOfBlockedTile(x2, y2);
+        } else { // m1 == m2
+            return true;
+        }
+    }
+
+    
+    inline bool isTautFromLeft(int x1, int y1, int x2, int y2, int x3, int y3) const {
+        if (x3 < x2) return false;
+        
+        int dy = y3 - y2;
+        if (dy < 0) { // y3 < y2
+            return topRightOfBlockedTile(x2, y2);
+        } else if (dy > 0) { // y3 > y2
+            return bottomRightOfBlockedTile(x2, y2);
+        } else { // y3 == y2
+            return true;
+        }
+    }
+
+    inline bool isTautFromRight(int x1, int y1, int x2, int y2, int x3, int y3) const {
+        if (x3 > x2) return false;
+        
+        int dy = y3 - y2;
+        if (dy < 0) { // y3 < y2
+            return topLeftOfBlockedTile(x2, y2);
+        } else if (dy > 0) { // y3 > y2
+            return bottomLeftOfBlockedTile(x2, y2);
+        } else { // y3 == y2
+            return true;
+        }
+    }
+
+    inline bool isTautFromBottom(int x1, int y1, int x2, int y2, int x3, int y3) const {
+        if (y3 < y2) return false;
+        
+        int dx = x3 - x2;
+        if (dx < 0) { // x3 < x2
+            return topRightOfBlockedTile(x2, y2);
+        } else if (dx > 0) { // x3 > x2
+            return topLeftOfBlockedTile(x2, y2);
+        } else { // x3 == x2
+            return true;
+        }
+    }
+
+    inline bool isTautFromTop(int x1, int y1, int x2, int y2, int x3, int y3) const {
+        if (y3 > y2) return false;
+        
+        int dx = x3 - x2;
+        if (dx < 0) { // x3 < x2
+            return bottomRightOfBlockedTile(x2, y2);
+        } else if (dx > 0) { // x3 > x2
+            return bottomLeftOfBlockedTile(x2, y2);
+        } else { // x3 == x2
+            return true;
+        }
+    }
+
+public:
+    
 };
 
 
