@@ -140,13 +140,62 @@ void Drawer::drawVisibilityGraph(const ENLSVGGraph& graph) {
 void Drawer::drawVisibilityGraph(const ENLSVGEdgeGraph& graph) {
     TGAImage& img = *imgPtr;
 
-    Colour c = Colours::LIME;
+    Colour cols[] {
+        Colours::BLUE,
+        Colours::LIME,
+        Colours::GREEN,
+        Colours::YELLOW,
+        Colours::ORANGE,
+        Colours::RED,
+        Colours::PURPLE,
+        Colours::BROWN,
+        Colours::MAGENTA,
+        Colours::CYAN,
+        Colours::PINK,
+        Colours::AQUA,
+        Colours::TEAL,
+        Colours::GREY,
+        Colours::LIGHTGREY,
+        Colours::DARKGREY
+    };
+    int nCols = sizeof(cols) / sizeof(*cols);
+
+    const int LEVEL_W = graph.LEVEL_W;
+
+    //Colour c = Colours::LIME;
     const std::vector<ENLSVGEdge>& edges = graph.edges;
     const std::vector<GridVertex>& vertices = graph.vertices;
-    for (size_t i=0; i<edges.size(); ++i) {
-        const ENLSVGEdge& edge = edges[i];
+    
+    // Do a counting sort on the edge indexes by level.
+    // MAX LEVEL <= edges.size()+1 (safe bound)
+    std::vector<size_t> iterationOrder;
+    {
+        const size_t levelWslot = edges.size()+1;
+        std::vector<int> levelCounts;
+        levelCounts.resize(edges.size()+3, 0);
+        for (size_t i=0; i<edges.size(); ++i) {
+            int level = edges[i].level;
+            levelCounts[(level != LEVEL_W ? level : levelWslot)+1]++;
+        }
+        for (size_t i=1; i<levelCounts.size(); ++i) {
+            levelCounts[i] += levelCounts[i-1];
+        }
+        iterationOrder.resize(edges.size());
+        for (size_t i=0; i<edges.size(); ++i) {
+            int level = edges[i].level;
+            level = level != LEVEL_W ? level : levelWslot;
+            iterationOrder[levelCounts[level]++] = i;
+        }
+    }
+
+
+    for (size_t i=0; i<iterationOrder.size(); ++i) {
+        const ENLSVGEdge& edge = edges[iterationOrder[i]];
         const GridVertex& u = vertices[edge.sourceVertex];
         const GridVertex& v = vertices[edge.destVertex];
+
+        const Colour& c = edge.level == -1 ? Colours::BLACK : cols[std::min(edge.level,nCols)];
+
         drawLine(u.x*scale, u.y*scale, v.x*scale, v.y*scale, c);
     }
 }
