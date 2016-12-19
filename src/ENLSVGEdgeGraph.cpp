@@ -96,13 +96,11 @@ void ENLSVGEdgeGraph::computeAllEdgeLevels() {
     std::vector<int> nNeighbours;
     nNeighbours.resize(edges.size());
     for (EdgeID i=0; i<edges.size(); ++i) {
-        if (edges[i].isOriginal()) {
-            int n = edges[i].tautOutgoingEdges.size() + edges[opposite(i)].tautOutgoingEdges.size();
-            nNeighbours[i] = n;
-            if (n == 0) currentLevelEdges.push_back(i);
-        }
+        int n = edges[i].tautOutgoingEdges.size();
+        nNeighbours[i] = n;
+        if (n == 0) currentLevelEdges.push_back(i);
     }
-
+    
     int currLevel = 1;
     while (currentLevelEdges.size() > 0) {
         for (size_t i=0;i<currentLevelEdges.size(); ++i) {
@@ -112,9 +110,11 @@ void ENLSVGEdgeGraph::computeAllEdgeLevels() {
             edges[curr].level = currLevel;
             edges[opp].level = currLevel;
 
-            const std::vector<EdgeID>& neighbours1 = edges[curr].tautOutgoingEdges;
-            for (size_t j=0; j<neighbours1.size(); ++j) {
-                EdgeID neighbour = getOriginal(neighbours1[j]);
+            // Curr side must have no neighbours.
+            // Opp side may have neighbours.
+            const std::vector<EdgeID>& neighbours = edges[opp].tautOutgoingEdges;
+            for (size_t j=0; j<neighbours.size(); ++j) {
+                EdgeID neighbour = opposite(neighbours[j]);
                 if (edges[neighbour].level != LEVEL_W) continue;
                 
                 --nNeighbours[neighbour];
@@ -125,18 +125,6 @@ void ENLSVGEdgeGraph::computeAllEdgeLevels() {
                 if (nNeighbours[neighbour] < 0) std::cout << "ERROR" << std::endl;
             }
 
-            const std::vector<EdgeID>& neighbours2 = edges[opp].tautOutgoingEdges;
-            for (size_t j=0; j<neighbours2.size(); ++j) {
-                EdgeID neighbour = getOriginal(neighbours2[j]);
-                if (edges[neighbour].level != LEVEL_W) continue;
-                
-                --nNeighbours[neighbour];
-                if (nNeighbours[neighbour] == 0) {
-                    nextLevelEdges.push_back(neighbour);
-                }
-                // debugging
-                if (nNeighbours[neighbour] < 0) std::cout << "ERROR" << std::endl;
-            }
         }
         currentLevelEdges.clear();
         std::swap(currentLevelEdges, nextLevelEdges);
