@@ -64,6 +64,7 @@ ENLSVGEdgeGraph::ENLSVGEdgeGraph(const Grid& grid, const LineOfSightScanner& sca
         }
     }
 
+    skipEdges.resize(vertices.size());
     buildHierarchy();
 }
 
