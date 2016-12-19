@@ -149,14 +149,12 @@ void Drawer::drawVisibilityGraph(const ENLSVGEdgeGraph& graph) {
         Colours::RED,
         Colours::PURPLE,
         Colours::BROWN,
-        Colours::MAGENTA,
         Colours::CYAN,
         Colours::PINK,
         Colours::AQUA,
         Colours::TEAL,
         Colours::GREY,
-        Colours::LIGHTGREY,
-        Colours::DARKGREY
+        Colours::LIGHTGREY
     };
     int nCols = sizeof(cols) / sizeof(*cols);
 
@@ -197,6 +195,24 @@ void Drawer::drawVisibilityGraph(const ENLSVGEdgeGraph& graph) {
         const Colour& c = edge.level == -1 ? Colours::BLACK : cols[std::min(edge.level,nCols)];
 
         drawLine(u.x*scale, u.y*scale, v.x*scale, v.y*scale, c);
+    }
+
+    for (size_t i=0; i<vertices.size(); ++i) {
+        if (graph.skipEdges[i].size() == 0) continue;
+
+        const Colour& c = Colours::MAGENTA;
+        const GridVertex& u = vertices[i];
+        const std::vector<SkipEdge>& edgeList = graph.skipEdges[i];
+        for (size_t j=0; j<edgeList.size(); ++j) {
+            const GridVertex& v = vertices[edgeList[j].next];
+            drawLine(u.x*scale, u.y*scale, v.x*scale, v.y*scale, c);
+        }
+    }
+
+    for (size_t i=0; i<vertices.size(); ++i) {
+        if (graph.skipEdges[i].size() == 0) continue;
+        const Colour& c = Colours::BLACK;
+        drawCircle(vertices[i].x*scale, vertices[i].y*scale, 3, c);
     }
 }
 
