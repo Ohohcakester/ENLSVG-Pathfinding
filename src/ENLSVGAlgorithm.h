@@ -11,16 +11,15 @@ class Grid;
 namespace VertexENLSVG {
     struct AStarData;
 
-    class ENLSVGAlgorithm {
+    class Algorithm {
 
     private:
         const Grid& grid;
         const LineOfSightScanner scanner;
     public:
-        const ENLSVGGraph graph; //Note: This must be defined after scanner and grid.
+        const VisibilityGraph graph; //Note: This must be defined after scanner and grid.
 
-
-        ENLSVGAlgorithm(const Grid& grid);
+        Algorithm(const Grid& grid);
 
         Path computePath(const int sx, const int sy, const int ex, const int ey) const;
         Path computeSVGPath(const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs = nullptr) const;

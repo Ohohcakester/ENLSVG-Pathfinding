@@ -18,12 +18,12 @@ namespace VertexENLSVG {
         double distance = POS_INF;
     };
 
-    ENLSVGAlgorithm::ENLSVGAlgorithm(const Grid& grid):
+    Algorithm::Algorithm(const Grid& grid):
         grid(grid), scanner(grid), graph(grid, scanner) {
     }
 
 
-    Path ENLSVGAlgorithm::computeSVGPath(const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs) const {
+    Path Algorithm::computeSVGPath(const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs) const {
         // START: SPECIAL CASES - Handle special cases first.
         if (sx == ex && sy == ey) {
             Path path;
@@ -120,7 +120,7 @@ namespace VertexENLSVG {
     }
 
 
-    Path ENLSVGAlgorithm::getPath(const std::vector<AStarData>& nodes, int goalParent,
+    Path Algorithm::getPath(const std::vector<AStarData>& nodes, int goalParent,
     const int sx, const int sy, const int ex, const int ey) const {
         Path path;
 
@@ -147,7 +147,7 @@ namespace VertexENLSVG {
         return path;
     }
 
-    void ENLSVGAlgorithm::setParentPointers(const std::vector<AStarData>& nodes,
+    void Algorithm::setParentPointers(const std::vector<AStarData>& nodes,
     int goalParent, int sx, int sy, int ex, int ey, ParentPtrs* parentPtrs) const {
         
         parentPtrs->goal = GridVertex(ex, ey);

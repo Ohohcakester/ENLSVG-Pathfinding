@@ -16,22 +16,22 @@ namespace ENLSVG {
     // restorePar returns the parent pointer to its original value.
     inline VertexID restorePar(VertexID k) {return k < 0 ? -k-1 : k;}
 
-    struct ENLSVGAStarData {
+    struct AStarData {
         bool visited = false;
         double edgeWeightToGoal = -1.0;
         VertexID parent = NO_PARENT;
         double distance = POS_INF;
 
-        ENLSVGAStarData(): visited(false), edgeWeightToGoal(-1.0), parent(NO_PARENT), distance(POS_INF) {}
+        AStarData(): visited(false), edgeWeightToGoal(-1.0), parent(NO_PARENT), distance(POS_INF) {}
     };
 
 
-    ENLSVGEdgeAlgorithm::ENLSVGEdgeAlgorithm(const Grid& grid):
+    Algorithm::Algorithm(const Grid& grid):
         grid(grid), scanner(grid), graph(grid, scanner) {
     }
 
 
-    Path ENLSVGEdgeAlgorithm::computeSVGPath(const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs) const {
+    Path Algorithm::computeSVGPath(const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs) const {
         // START: SPECIAL CASES - Handle special cases first.
         if (sx == ex && sy == ey) {
             Path path;
@@ -47,7 +47,7 @@ namespace ENLSVG {
 
 
         const size_t nNodes = graph.vertices.size();
-        std::vector<ENLSVGAStarData> nodes;
+        std::vector<AStarData> nodes;
         nodes.resize(nNodes);
         IndirectHeap pq(nNodes);
 
@@ -130,7 +130,7 @@ namespace ENLSVG {
 
 
 
-    Path ENLSVGEdgeAlgorithm::computePath(const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs) const {
+    Path Algorithm::computePath(const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs) const {
         // START: SPECIAL CASES - Handle special cases first.
         if (sx == ex && sy == ey) {
             Path path;
@@ -146,8 +146,8 @@ namespace ENLSVG {
 
 
         const size_t nNodes = graph.vertices.size();
-        std::vector<ENLSVGAStarData> nodes;
-        nodes.resize(nNodes, ENLSVGAStarData());
+        std::vector<AStarData> nodes;
+        nodes.resize(nNodes, AStarData());
         IndirectHeap pq(nNodes);
 
         MarkedEdges markedEdges(graph.edges.size());
@@ -256,7 +256,7 @@ namespace ENLSVG {
 
 
 
-    Path ENLSVGEdgeAlgorithm::getPath(const std::vector<ENLSVGAStarData>& nodes, int goalParent,
+    Path Algorithm::getPath(const std::vector<AStarData>& nodes, int goalParent,
     const int sx, const int sy, const int ex, const int ey) const {
         Path path;
 
@@ -327,7 +327,7 @@ namespace ENLSVG {
         return path;
     }
 
-    void ENLSVGEdgeAlgorithm::setParentPointers(const std::vector<ENLSVGAStarData>& nodes,
+    void Algorithm::setParentPointers(const std::vector<AStarData>& nodes,
     int goalParent, int sx, int sy, int ex, int ey, ParentPtrs* parentPtrs) const {
 
         parentPtrs->goal = GridVertex(ex, ey);

@@ -5,7 +5,7 @@
 using namespace VertexENLSVG;
 
 namespace VertexENLSVG {
-    ENLSVGGraph::ENLSVGGraph(const Grid& grid, const LineOfSightScanner& scanner):
+    VisibilityGraph::VisibilityGraph(const Grid& grid, const LineOfSightScanner& scanner):
         sizeX(grid.sizeX), sizeY(grid.sizeY), scanner(scanner) {
 
         // Initialise vertices (outer corners).

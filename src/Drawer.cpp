@@ -122,7 +122,7 @@ void Drawer::drawGrid(const Grid& grid) {
     }
 }
 
-void Drawer::drawVisibilityGraph(const VertexENLSVG::ENLSVGGraph& graph) {
+void Drawer::drawVisibilityGraph(const VertexENLSVG::VisibilityGraph& graph) {
     TGAImage& img = *imgPtr;
 
     Colour c = Colours::LIME;
@@ -137,7 +137,7 @@ void Drawer::drawVisibilityGraph(const VertexENLSVG::ENLSVGGraph& graph) {
     }
 }
 
-void Drawer::drawVisibilityGraph(const ENLSVG::ENLSVGEdgeGraph& graph) {
+void Drawer::drawVisibilityGraph(const ENLSVG::VisibilityGraph& graph) {
     TGAImage& img = *imgPtr;
 
     Colour cols[] {
@@ -161,7 +161,7 @@ void Drawer::drawVisibilityGraph(const ENLSVG::ENLSVGEdgeGraph& graph) {
     const int LEVEL_W = graph.LEVEL_W;
 
     //Colour c = Colours::LIME;
-    const std::vector<ENLSVG::ENLSVGEdge>& edges = graph.edges;
+    const std::vector<ENLSVG::EdgeData>& edges = graph.edges;
     const std::vector<GridVertex>& vertices = graph.vertices;
     
     // Do a counting sort on the edge indexes by level.
@@ -188,7 +188,7 @@ void Drawer::drawVisibilityGraph(const ENLSVG::ENLSVGEdgeGraph& graph) {
 
 
     for (size_t i=0; i<iterationOrder.size(); ++i) {
-        const ENLSVG::ENLSVGEdge& edge = edges[iterationOrder[i]];
+        const ENLSVG::EdgeData& edge = edges[iterationOrder[i]];
         const GridVertex& u = vertices[edge.sourceVertex];
         const GridVertex& v = vertices[edge.destVertex];
 

@@ -5,8 +5,8 @@
 #include "PathfindingDataTypes.h"
 class Grid;
 class TGAImage;
-namespace VertexENLSVG { class ENLSVGGraph; }
-namespace ENLSVG { class ENLSVGEdgeGraph; }
+namespace VertexENLSVG { class VisibilityGraph; }
+namespace ENLSVG { class VisibilityGraph; }
 struct Colour;
 
 class Drawer {
@@ -16,8 +16,8 @@ public:
 
     void save(const std::string& filename);
     void drawGrid(const Grid& grid);
-    void drawVisibilityGraph(const VertexENLSVG::ENLSVGGraph& graph);
-    void drawVisibilityGraph(const ENLSVG::ENLSVGEdgeGraph& graph);
+    void drawVisibilityGraph(const VertexENLSVG::VisibilityGraph& graph);
+    void drawVisibilityGraph(const ENLSVG::VisibilityGraph& graph);
     void drawPoint(int px, int py);
     void drawPath(const Path& path);
     void drawParentPointers(const ParentPtrs& ptrs);

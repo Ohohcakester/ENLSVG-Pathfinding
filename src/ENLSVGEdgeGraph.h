@@ -9,7 +9,7 @@ class Grid;
 class LineOfSightScanner;
 
 namespace ENLSVG {
-    struct ENLSVGEdge {
+    struct EdgeData {
         EdgeID oppositeEdge;
         const VertexID sourceVertex;
         const VertexID destVertex;
@@ -19,7 +19,7 @@ namespace ENLSVG {
 
         inline bool isOriginal() const {return sourceVertex < destVertex;}
 
-        ENLSVGEdge(VertexID sourceVertex, VertexID destVertex, double weight, int level)
+        EdgeData(VertexID sourceVertex, VertexID destVertex, double weight, int level)
         : sourceVertex(sourceVertex), destVertex(destVertex), weight(weight), level(level) {}
     };
 
@@ -54,10 +54,10 @@ namespace ENLSVG {
         }
     };
 
-    class ENLSVGEdgeGraph {
+    class VisibilityGraph {
 
     public:
-        ENLSVGEdgeGraph(const Grid& grid, const LineOfSightScanner& scanner);
+        VisibilityGraph(const Grid& grid, const LineOfSightScanner& scanner);
         void markEdgesFrom(MarkedEdges& markedEdges, const int sx, const int sy, const std::vector<GridVertex>& neighbours) const;
         void markBothWays(MarkedEdges& markedEdges) const;
         inline bool isSkipVertex(VertexID vertexID) const {return skipEdges[vertexID].size() > 0;}
@@ -75,7 +75,7 @@ namespace ENLSVG {
         std::vector<std::vector<VertexID>> nodeIndexes;
 
         // Indexed by EdgeID
-        std::vector<ENLSVGEdge> edges;
+        std::vector<EdgeData> edges;
         
     private:
         const Grid& grid;

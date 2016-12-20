@@ -10,21 +10,21 @@
 class Grid;
 
 namespace ENLSVG {
-    struct ENLSVGAStarData;
+    struct AStarData;
 
     // NO_PARENT should be positive to be immune to restorePar
     const VertexID NO_PARENT = std::numeric_limits<VertexID>::max();
 
-    class ENLSVGEdgeAlgorithm {
+    class Algorithm {
 
     private:
         const Grid& grid;
         const LineOfSightScanner scanner;
     public:
-        const ENLSVGEdgeGraph graph; //Note: This must be defined after scanner and grid.
+        const VisibilityGraph graph; //Note: This must be defined after scanner and grid.
 
 
-        ENLSVGEdgeAlgorithm(const Grid& grid);
+        Algorithm(const Grid& grid);
 
         Path computePath(const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs) const;
         Path computeSVGPath(const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs = nullptr) const;
@@ -49,8 +49,8 @@ namespace ENLSVG {
         }
 
     private:
-        Path getPath(const std::vector<ENLSVGAStarData>& nodes, int goalParent, const int sx, const int sy, const int ex, const int ey) const;
-        void setParentPointers(const std::vector<ENLSVGAStarData>& nodes, int goalParent, int sx, int sy, int ex, int ey, ParentPtrs* parentPtrs) const;
+        Path getPath(const std::vector<AStarData>& nodes, int goalParent, const int sx, const int sy, const int ex, const int ey) const;
+        void setParentPointers(const std::vector<AStarData>& nodes, int goalParent, int sx, int sy, int ex, int ey, ParentPtrs* parentPtrs) const;
     };
 }
 

@@ -15,9 +15,9 @@ namespace VertexENLSVG {
         //OutgoingEdge(int dest, double weight): dest(dest), weight(weight) {}
     };
 
-    class ENLSVGGraph {
+    class VisibilityGraph {
     public:
-        ENLSVGGraph(const Grid& grid, const LineOfSightScanner& scanner);
+        VisibilityGraph(const Grid& grid, const LineOfSightScanner& scanner);
 
         const int sizeX;
         const int sizeY;

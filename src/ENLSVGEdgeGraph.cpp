@@ -6,7 +6,7 @@
 using namespace ENLSVG;
 
 namespace ENLSVG {
-    ENLSVGEdgeGraph::ENLSVGEdgeGraph(const Grid& grid, const LineOfSightScanner& scanner):
+    VisibilityGraph::VisibilityGraph(const Grid& grid, const LineOfSightScanner& scanner):
         grid(grid), sizeX(grid.sizeX), sizeY(grid.sizeY), scanner(scanner) {
 
         // Initialise vertices (outer corners).
@@ -43,7 +43,7 @@ namespace ENLSVG {
 
         // Connect Taut Neighbours of Edges
         for (size_t i=0; i<edges.size(); ++i) {
-            ENLSVGEdge& edge = edges[i];
+            EdgeData& edge = edges[i];
             std::vector<EdgeID>& tautOutgoingEdges = edge.tautOutgoingEdges;
             VertexID src = edge.sourceVertex;
             VertexID dest = edge.destVertex;
@@ -71,14 +71,14 @@ namespace ENLSVG {
         buildHierarchy();
     }
 
-    void ENLSVGEdgeGraph::connectEdge(int i, int j, int xi, int yi, int xj, int yj) {
+    void VisibilityGraph::connectEdge(int i, int j, int xi, int yi, int xj, int yj) {
         double weight = grid.euclideanDistance(xi,yi,xj,yj);
 
         EdgeID edge_ij = edges.size();
-        edges.push_back(ENLSVGEdge(i, j, weight, LEVEL_W));
+        edges.push_back(EdgeData(i, j, weight, LEVEL_W));
 
         EdgeID edge_ji = edges.size();
-        edges.push_back(ENLSVGEdge(j, i, weight, LEVEL_W));
+        edges.push_back(EdgeData(j, i, weight, LEVEL_W));
 
         edges[edge_ij].oppositeEdge = edge_ji;
         edges[edge_ji].oppositeEdge = edge_ij;
@@ -87,12 +87,12 @@ namespace ENLSVG {
         edgeLists[j].push_back(edge_ji);
     }
 
-    void ENLSVGEdgeGraph::buildHierarchy() {
+    void VisibilityGraph::buildHierarchy() {
         computeAllEdgeLevels();
         setupSkipEdges();
     }
 
-    void ENLSVGEdgeGraph::computeAllEdgeLevels() {
+    void VisibilityGraph::computeAllEdgeLevels() {
 
         std::vector<EdgeID> currentLevelEdges;
         std::vector<EdgeID> nextLevelEdges;
@@ -135,7 +135,7 @@ namespace ENLSVG {
         }
     }
 
-    void ENLSVGEdgeGraph::setupSkipEdges() {
+    void VisibilityGraph::setupSkipEdges() {
         std::vector<VertexID> skipVertices;
         std::vector<bool> isSkipVertex;
         isSkipVertex.resize(vertices.size(), false);
@@ -172,7 +172,7 @@ namespace ENLSVG {
         }
     }
 
-    void ENLSVGEdgeGraph::followLevelWPathToNextSkipVertex(EdgeID firstEdge,
+    void VisibilityGraph::followLevelWPathToNextSkipVertex(EdgeID firstEdge,
         double& totalWeight, VertexID& nextVertex, VertexID& immediateNext,
         VertexID& immediateLast, const std::vector<bool>& isSkipVertex) const {
         EdgeID currEdge = firstEdge;
@@ -197,7 +197,7 @@ namespace ENLSVG {
         nextVertex = edges[currEdge].destVertex; // RETURN VALUE
     }
 
-    void ENLSVGEdgeGraph::markEdgesFrom(MarkedEdges& markedEdges, const int sx, const int sy, const std::vector<GridVertex>& neighbours) const {
+    void VisibilityGraph::markEdgesFrom(MarkedEdges& markedEdges, const int sx, const int sy, const std::vector<GridVertex>& neighbours) const {
         std::vector<EdgeID> edgeQueue;
         size_t i = 0;
 
@@ -207,7 +207,7 @@ namespace ENLSVG {
             const std::vector<EdgeID>& edgeList = edgeLists[neighbour];
             for (size_t j=0; j<edgeList.size(); ++j) {
                 const EdgeID id = edgeList[j];
-                const ENLSVGEdge& edge = edges[id];
+                const EdgeData& edge = edges[id];
                 //const GridVertex& u = vertices[edge.sourceVertex];
                 const GridVertex& v = vertices[edge.destVertex];
                 if (grid.isTaut(sx, sy, u.x, u.y, v.x, v.y)) {
@@ -241,7 +241,7 @@ namespace ENLSVG {
     }
 
     // Duplicate all markings. Call this after calling markEdgesFrom from both start and goal.
-    void ENLSVGEdgeGraph::markBothWays(MarkedEdges& markedEdges) const {
+    void VisibilityGraph::markBothWays(MarkedEdges& markedEdges) const {
         std::vector<EdgeID>& markedIndexes = markedEdges.markedIndexes;
         size_t nMarked = markedIndexes.size(); // freeze size.
         for (size_t i=0;i<nMarked;++i) {
