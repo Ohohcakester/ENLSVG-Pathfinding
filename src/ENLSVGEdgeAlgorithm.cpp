@@ -168,11 +168,9 @@ namespace ENLSVG {
                     nodes[neighbour].distance = dist;
                     pq.decreaseKey(neighbour, dist + heuristic(neighbour, ex, ey));
                 }
-                if (startIndex != -1) { // TODO: I THINK THIS IS NOT NEEDED.
-                    // IF start vertex is a VG node, add it too.
+                if (startIndex != -1) {
+                    // IF start vertex is a VG node, mark it as visited so we don't waste time on it.
                     nodes[startIndex].visited = true;
-                    //pq.decreaseKey(startIndex, 0);
-                    //nodes[startIndex].distance = 0;    
                 }
                 graph.markEdgesFrom(markedEdges, sx, sy, neighbours);
             }
@@ -186,10 +184,9 @@ namespace ENLSVG {
                     int neighbour = graph.nodeIndexes[vn.y][vn.x];
                     nodes[neighbour].edgeWeightToGoal = grid.euclideanDistance(vn.x, vn.y, ex, ey);
                 }
-                if (goalIndex != -1) { // TODO: I THINK THIS IS NOT NEEDED.
-                    // IF goal vertex is a VG node, add it too.
+                if (goalIndex != -1) {
+                    // IF goal vertex is a VG node, mark it as visited so we don't waste time on it.
                     nodes[goalIndex].visited = true;
-                    //nodes[goalIndex].edgeWeightToGoal = 0;
                 }
                 graph.markEdgesFrom(markedEdges, ex, ey, neighbours);
             }
