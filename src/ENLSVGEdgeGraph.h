@@ -57,6 +57,7 @@ public:
     ENLSVGEdgeGraph(const Grid& grid, const LineOfSightScanner& scanner);
     void markEdgesFrom(MarkedEdges& markedEdges, const int sx, const int sy, const std::vector<GridVertex>& neighbours) const;
     void markBothWays(MarkedEdges& markedEdges) const;
+    inline bool isSkipVertex(VertexID vertexID) const {return skipEdges[vertexID].size() > 0;}
 
     const int LEVEL_W = -1;
     const int sizeX;
@@ -78,8 +79,6 @@ private:
     const LineOfSightScanner& scanner;
 
     inline EdgeID opposite(EdgeID edgeID) const {return edges[edgeID].oppositeEdge;}
-    inline EdgeID getOriginal(EdgeID edgeID) const {return edges[edgeID].isOriginal() ? edgeID : edges[edgeID].oppositeEdge;}
-    inline bool isSkipVertex(VertexID vertexID) const {return skipEdges[vertexID].size() > 0;}
 
     void connectEdge(int i, int j, int xi, int yi, int xj, int yj);
     void buildHierarchy();
