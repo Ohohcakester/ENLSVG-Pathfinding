@@ -25,7 +25,18 @@ namespace ENLSVG {
     };
 
     class Memory {
+        friend class Algorithm;
+        
     public:
+        Memory(const VisibilityGraph& graph): nEdges(graph.edges.size()),
+        nNodes(graph.vertices.size()), markedEdges(nEdges), pq(nNodes) {
+            const size_t nNodes = graph.vertices.size();
+            nodes.resize(nNodes);
+            ticketCheck.resize(nNodes, 0);
+            ticketNumber = 1;
+        }
+
+    private:
         const size_t nEdges;
         const size_t nNodes;
         const AStarData def; // default values
@@ -37,13 +48,6 @@ namespace ENLSVG {
         MarkedEdges markedEdges;
         IndirectHeap pq;
 
-        Memory(const VisibilityGraph& graph): nEdges(graph.edges.size()),
-        nNodes(graph.vertices.size()), markedEdges(nEdges), pq(nNodes) {
-            const size_t nNodes = graph.vertices.size();
-            nodes.resize(nNodes);
-            ticketCheck.resize(nNodes, 0);
-            ticketNumber = 1;
-        }
 
         void initialise() {
             if (ticketNumber != -1) {
