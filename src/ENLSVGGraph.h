@@ -6,26 +6,28 @@
 class Grid;
 class LineOfSightScanner;
 
-struct OutgoingEdge {
-    int dest;
-    double weight;
+namespace VertexENLSVG {
+    struct OutgoingEdge {
+        int dest;
+        double weight;
 
-    OutgoingEdge() {}
-    //OutgoingEdge(int dest, double weight): dest(dest), weight(weight) {}
-};
+        OutgoingEdge() {}
+        //OutgoingEdge(int dest, double weight): dest(dest), weight(weight) {}
+    };
 
-class ENLSVGGraph {
-public:
-    ENLSVGGraph(const Grid& grid, const LineOfSightScanner& scanner);
+    class ENLSVGGraph {
+    public:
+        ENLSVGGraph(const Grid& grid, const LineOfSightScanner& scanner);
 
-    const int sizeX;
-    const int sizeY;
-    std::vector<GridVertex> vertices;
-    std::vector<std::vector<OutgoingEdge>> edgeLists;
-    std::vector<std::vector<int>> nodeIndexes;
+        const int sizeX;
+        const int sizeY;
+        std::vector<GridVertex> vertices;
+        std::vector<std::vector<OutgoingEdge>> edgeLists;
+        std::vector<std::vector<int>> nodeIndexes;
 
-private:
-    const LineOfSightScanner& scanner;
-};
+    private:
+        const LineOfSightScanner& scanner;
+    };
+}
 
 #endif

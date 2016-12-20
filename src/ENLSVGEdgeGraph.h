@@ -7,92 +7,91 @@
 #include <limits>
 class Grid;
 class LineOfSightScanner;
-typedef int VertexID;
-typedef size_t EdgeID;
 
-struct ENLSVGEdge {
-    EdgeID oppositeEdge;
-    const VertexID sourceVertex;
-    const VertexID destVertex;
-    const double weight;
-    int level;
-    std::vector<EdgeID> tautOutgoingEdges;
+namespace ENLSVG {
+    struct ENLSVGEdge {
+        EdgeID oppositeEdge;
+        const VertexID sourceVertex;
+        const VertexID destVertex;
+        const double weight;
+        int level;
+        std::vector<EdgeID> tautOutgoingEdges;
 
-    inline bool isOriginal() const {return sourceVertex < destVertex;}
+        inline bool isOriginal() const {return sourceVertex < destVertex;}
 
-    ENLSVGEdge(VertexID sourceVertex, VertexID destVertex, double weight, int level)
-    : sourceVertex(sourceVertex), destVertex(destVertex), weight(weight), level(level) {}
-};
+        ENLSVGEdge(VertexID sourceVertex, VertexID destVertex, double weight, int level)
+        : sourceVertex(sourceVertex), destVertex(destVertex), weight(weight), level(level) {}
+    };
 
-struct SkipEdge {
-    const VertexID next;
-    const double weight;
-    const VertexID immediateNext; // immediate vertex just after current
-    const VertexID immediateLast; // immediate vertex just before next.
+    struct SkipEdge {
+        const VertexID next;
+        const double weight;
+        const VertexID immediateNext; // immediate vertex just after current
+        const VertexID immediateLast; // immediate vertex just before next.
 
-    SkipEdge(VertexID next, double weight, VertexID imNext, VertexID imLast)
-    : next(next), weight(weight), immediateNext(imNext), immediateLast(imLast) {}
-};
+        SkipEdge(VertexID next, double weight, VertexID imNext, VertexID imLast)
+        : next(next), weight(weight), immediateNext(imNext), immediateLast(imLast) {}
+    };
 
-struct MarkedEdges {
-    std::vector<bool> isMarked;
-    std::vector<EdgeID> markedIndexes;
+    struct MarkedEdges {
+        std::vector<bool> isMarked;
+        std::vector<EdgeID> markedIndexes;
 
-    MarkedEdges(size_t nEdges) {
-        isMarked.resize(nEdges, false);
-    }
-
-    inline void mark(EdgeID index) {
-        isMarked[index] = true;
-        markedIndexes.push_back(index);
-    }
-
-    inline void clear() {
-        for (size_t i=0;i<markedIndexes.size();++i) {
-            isMarked[i] = false;
+        MarkedEdges(size_t nEdges) {
+            isMarked.resize(nEdges, false);
         }
-        markedIndexes.clear();
-    }
-};
 
-class ENLSVGEdgeGraph {
+        inline void mark(EdgeID index) {
+            isMarked[index] = true;
+            markedIndexes.push_back(index);
+        }
 
-public:
-    ENLSVGEdgeGraph(const Grid& grid, const LineOfSightScanner& scanner);
-    void markEdgesFrom(MarkedEdges& markedEdges, const int sx, const int sy, const std::vector<GridVertex>& neighbours) const;
-    void markBothWays(MarkedEdges& markedEdges) const;
-    inline bool isSkipVertex(VertexID vertexID) const {return skipEdges[vertexID].size() > 0;}
+        inline void clear() {
+            for (size_t i=0;i<markedIndexes.size();++i) {
+                isMarked[i] = false;
+            }
+            markedIndexes.clear();
+        }
+    };
 
-    const int LEVEL_W = std::numeric_limits<VertexID>::max();
-    const int sizeX;
-    const int sizeY;
+    class ENLSVGEdgeGraph {
 
-    // Indexed by VertexID
-    std::vector<GridVertex> vertices;
-    std::vector<std::vector<EdgeID>> edgeLists; // points to edge indexes.
-    std::vector<std::vector<SkipEdge>> skipEdges;
+    public:
+        ENLSVGEdgeGraph(const Grid& grid, const LineOfSightScanner& scanner);
+        void markEdgesFrom(MarkedEdges& markedEdges, const int sx, const int sy, const std::vector<GridVertex>& neighbours) const;
+        void markBothWays(MarkedEdges& markedEdges) const;
+        inline bool isSkipVertex(VertexID vertexID) const {return skipEdges[vertexID].size() > 0;}
 
-    // Indexed by grid coordinates.
-    std::vector<std::vector<VertexID>> nodeIndexes;
+        const int LEVEL_W = std::numeric_limits<VertexID>::max();
+        const int sizeX;
+        const int sizeY;
 
-    // Indexed by EdgeID
-    std::vector<ENLSVGEdge> edges;
-    
-private:
-    const Grid& grid;
-    const LineOfSightScanner& scanner;
+        // Indexed by VertexID
+        std::vector<GridVertex> vertices;
+        std::vector<std::vector<EdgeID>> edgeLists; // points to edge indexes.
+        std::vector<std::vector<SkipEdge>> skipEdges;
 
-    inline EdgeID opposite(EdgeID edgeID) const {return edges[edgeID].oppositeEdge;}
+        // Indexed by grid coordinates.
+        std::vector<std::vector<VertexID>> nodeIndexes;
 
-    void connectEdge(int i, int j, int xi, int yi, int xj, int yj);
-    void buildHierarchy();
-    void computeAllEdgeLevels();
-    void setupSkipEdges();
-    void followLevelWPathToNextSkipVertex(EdgeID firstEdge,
-        double& totalWeight, VertexID& nextVertex, VertexID& immediateNext,
-        VertexID& immediateLast, const std::vector<bool>& isSkipVertex) const;
-};
+        // Indexed by EdgeID
+        std::vector<ENLSVGEdge> edges;
+        
+    private:
+        const Grid& grid;
+        const LineOfSightScanner& scanner;
 
+        inline EdgeID opposite(EdgeID edgeID) const {return edges[edgeID].oppositeEdge;}
+
+        void connectEdge(int i, int j, int xi, int yi, int xj, int yj);
+        void buildHierarchy();
+        void computeAllEdgeLevels();
+        void setupSkipEdges();
+        void followLevelWPathToNextSkipVertex(EdgeID firstEdge,
+            double& totalWeight, VertexID& nextVertex, VertexID& immediateNext,
+            VertexID& immediateLast, const std::vector<bool>& isSkipVertex) const;
+    };
+}
 
 
 #endif

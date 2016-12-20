@@ -122,14 +122,14 @@ void Drawer::drawGrid(const Grid& grid) {
     }
 }
 
-void Drawer::drawVisibilityGraph(const ENLSVGGraph& graph) {
+void Drawer::drawVisibilityGraph(const VertexENLSVG::ENLSVGGraph& graph) {
     TGAImage& img = *imgPtr;
 
     Colour c = Colours::LIME;
     const std::vector<GridVertex>& vertices = graph.vertices;
     for (size_t i=0; i<vertices.size(); ++i) {
         const GridVertex& u = vertices[i];
-        const std::vector<OutgoingEdge>& edgeList = graph.edgeLists[i];
+        const std::vector<VertexENLSVG::OutgoingEdge>& edgeList = graph.edgeLists[i];
         for (size_t j=0; j<edgeList.size(); ++j) {
             const GridVertex& v = vertices[edgeList[j].dest];
             drawLine(u.x*scale, u.y*scale, v.x*scale, v.y*scale, c);
@@ -137,7 +137,7 @@ void Drawer::drawVisibilityGraph(const ENLSVGGraph& graph) {
     }
 }
 
-void Drawer::drawVisibilityGraph(const ENLSVGEdgeGraph& graph) {
+void Drawer::drawVisibilityGraph(const ENLSVG::ENLSVGEdgeGraph& graph) {
     TGAImage& img = *imgPtr;
 
     Colour cols[] {
@@ -161,7 +161,7 @@ void Drawer::drawVisibilityGraph(const ENLSVGEdgeGraph& graph) {
     const int LEVEL_W = graph.LEVEL_W;
 
     //Colour c = Colours::LIME;
-    const std::vector<ENLSVGEdge>& edges = graph.edges;
+    const std::vector<ENLSVG::ENLSVGEdge>& edges = graph.edges;
     const std::vector<GridVertex>& vertices = graph.vertices;
     
     // Do a counting sort on the edge indexes by level.
@@ -188,7 +188,7 @@ void Drawer::drawVisibilityGraph(const ENLSVGEdgeGraph& graph) {
 
 
     for (size_t i=0; i<iterationOrder.size(); ++i) {
-        const ENLSVGEdge& edge = edges[iterationOrder[i]];
+        const ENLSVG::ENLSVGEdge& edge = edges[iterationOrder[i]];
         const GridVertex& u = vertices[edge.sourceVertex];
         const GridVertex& v = vertices[edge.destVertex];
 
@@ -202,7 +202,7 @@ void Drawer::drawVisibilityGraph(const ENLSVGEdgeGraph& graph) {
 
         const Colour& c = Colours::MAGENTA;
         const GridVertex& u = vertices[i];
-        const std::vector<SkipEdge>& edgeList = graph.skipEdges[i];
+        const std::vector<ENLSVG::SkipEdge>& edgeList = graph.skipEdges[i];
         for (size_t j=0; j<edgeList.size(); ++j) {
             const GridVertex& v = vertices[edgeList[j].next];
             drawLine(u.x*scale, u.y*scale, v.x*scale, v.y*scale, c);

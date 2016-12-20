@@ -1,6 +1,7 @@
 #ifndef _PATHFINDING_DATA_TYPES_H_
 #define _PATHFINDING_DATA_TYPES_H_
 
+#include <cstddef>
 #include <vector>
 
 struct GridVertex {
@@ -19,5 +20,8 @@ struct ParentPtrs {
     GridVertex goal;
     GridVertex goalParent;
 };
+
+typedef int VertexID;
+typedef size_t EdgeID;
 
 #endif

@@ -13,12 +13,12 @@ int main() {
     //RandomGridGenerator::generateRandomGrid(grid, 0.5f);
     RandomGridGenerator::generateAutomataGrid(grid, 0.5f, 5, 1.f);
 
-    ENLSVGEdgeAlgorithm enlsvg(grid);
+    ENLSVG::ENLSVGEdgeAlgorithm enlsvg(grid);
 
     const int sx = 152;
-    const int sy = 72;
-    const int ex = 53;
-    const int ey = 95;
+    const int sy = 80;
+    const int ex = 48;
+    const int ey = 40;
     ParentPtrs parentPtrs;
     Path path = enlsvg.computePath(sx, sy, ex, ey, &parentPtrs);
 
