@@ -122,8 +122,7 @@ void ENLSVGEdgeGraph::computeAllEdgeLevels() {
                 if (nNeighbours[neighbour] == 0) {
                     nextLevelEdges.push_back(neighbour);
                 }
-                // debugging
-                if (nNeighbours[neighbour] < 0) std::cout << "ERROR" << std::endl;
+                // debugging: if (nNeighbours[neighbour] < 0) std::cout << "ERROR" << std::endl;
             }
 
         }
