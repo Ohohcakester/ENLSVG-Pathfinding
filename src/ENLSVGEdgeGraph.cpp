@@ -188,10 +188,26 @@ void ENLSVGEdgeGraph::followLevelWPathToNextSkipVertex(EdgeID firstEdge, double&
     nextVertex = edges[currEdge].destVertex; // RETURN VALUE
 }
 
-void ENLSVGEdgeGraph::markEdgesFrom(MarkedEdges& markedEdges, const int sx, const int sy, const std::vector<int>& neighbours) const {
+void ENLSVGEdgeGraph::markEdgesFrom(MarkedEdges& markedEdges, const int sx, const int sy, const std::vector<GridVertex>& neighbours) const {
     std::vector<EdgeID> edgeQueue;
     size_t i = 0;
-    
+
+    for (size_t i=0; i<neighbours.size(); ++i) {
+        const GridVertex& u = neighbours[i];
+        const VertexID neighbour = nodeIndexes[u.y][u.x];
+        const std::vector<EdgeID>& edgeList = edgeLists[neighbour];
+        for (size_t j=0; j<edgeList.size(); ++j) {
+            const EdgeID id = edgeList[j];
+            const ENLSVGEdge& edge = edges[id];
+            //const GridVertex& u = vertices[edge.sourceVertex];
+            const GridVertex& v = vertices[edge.destVertex];
+            if (grid.isTaut(sx, sy, u.x, u.y, v.x, v.y)) {
+                markedEdges.mark(id);
+                edgeQueue.push_back(id);
+            }
+        }
+    }
+
     while (i < edgeQueue.size()) {
         EdgeID curr = edgeQueue[i];
 

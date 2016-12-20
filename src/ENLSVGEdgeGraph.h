@@ -55,7 +55,7 @@ class ENLSVGEdgeGraph {
 
 public:
     ENLSVGEdgeGraph(const Grid& grid, const LineOfSightScanner& scanner);
-    void markEdgesFrom(MarkedEdges& markedEdges, const int sx, const int sy, const std::vector<int>& neighbours) const;
+    void markEdgesFrom(MarkedEdges& markedEdges, const int sx, const int sy, const std::vector<GridVertex>& neighbours) const;
     void markBothWays(MarkedEdges& markedEdges) const;
 
     const int LEVEL_W = -1;
