@@ -48,7 +48,7 @@ namespace ENLSVG {
 
         inline void clear() {
             for (size_t i=0;i<markedIndexes.size();++i) {
-                isMarked[i] = false;
+                isMarked[markedIndexes[i]] = false;
             }
             markedIndexes.clear();
         }
