@@ -6,8 +6,12 @@
 #include "LineOfSightScanner.h"
 #include "Grid.h"
 #include <cmath>
+#include <limits>
 class Grid;
-struct AStarData;
+struct ENLSVGAStarData;
+
+// NO_PARENT should be positive to be immune to restorePar
+const VertexID NO_PARENT = std::numeric_limits<VertexID>::max();
 
 class ENLSVGEdgeAlgorithm {
 
@@ -20,7 +24,7 @@ public:
 
     ENLSVGEdgeAlgorithm(const Grid& grid);
 
-    Path computePath(const int sx, const int sy, const int ex, const int ey) const;
+    Path computePath(const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs) const;
     Path computeSVGPath(const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs = nullptr) const;
 
     inline double heuristic(int index, int ex, int ey) const {
@@ -30,7 +34,7 @@ public:
     }
 
     inline bool isTaut(int parent, int curr, int next) const {
-        if (parent == -1) return true;
+        if (parent == NO_PARENT) return true;
         const std::vector<GridVertex>& vertices = graph.vertices;
         int x1 = vertices[parent].x;
         int y1 = vertices[parent].y;
@@ -43,8 +47,8 @@ public:
     }
 
 private:
-    Path getPath(const std::vector<AStarData>& nodes, int goalParent, const int sx, const int sy, const int ex, const int ey) const;
-    void setParentPointers(const std::vector<AStarData>& nodes, int goalParent, int sx, int sy, int ex, int ey, ParentPtrs* parentPtrs) const;
+    Path getPath(const std::vector<ENLSVGAStarData>& nodes, int goalParent, const int sx, const int sy, const int ex, const int ey) const;
+    void setParentPointers(const std::vector<ENLSVGAStarData>& nodes, int goalParent, int sx, int sy, int ex, int ey, ParentPtrs* parentPtrs) const;
 };
 
 
