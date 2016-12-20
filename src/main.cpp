@@ -21,8 +21,14 @@ int main() {
     const int ex = 48;
     const int ey = 40;
     ParentPtrs parentPtrs;
+
+    for (size_t i=0;i<10000;++i) {
+        //std::cout << "trial " << i << std::endl;
+        enlsvg.computePath(memory, rand()%sizeX, rand()%sizeY, rand()%sizeX, rand()%sizeY);
+    }
     Path path = enlsvg.computePath(memory, sx, sy, ex, ey, &parentPtrs);
 
+    //std::cout << "Path hops : " << path.size() << std::endl;
     Drawer drawer(grid, 5);
     drawer.drawGrid(grid);
     //drawer.drawVisibilityGraph(enlsvg.graph);
