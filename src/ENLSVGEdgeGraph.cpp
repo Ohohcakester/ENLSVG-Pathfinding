@@ -226,7 +226,9 @@ void ENLSVGEdgeGraph::markEdgesFrom(MarkedEdges& markedEdges, const int sx, cons
             EdgeID next = tautOutgoingEdges[j];
             if (markedEdges.isMarked[next]) continue;
 
-            if (edges[next].level > currLevel || (!skipVertex && edges[next].level == LEVEL_W)) {
+            // Should be (currLevel != LEVEL_W && edges[next].level > currLevel) || (!skipVertex && edges[next].level == LEVEL_W)
+            // But we set LEVEL_W = INT_MAX, so, "currLevel != LEVEL_W" is no longer needed.
+            if ((edges[next].level > currLevel) || (!skipVertex && edges[next].level == LEVEL_W)) {
                 markedEdges.mark(next);
                 edgeQueue.push_back(next);
             }

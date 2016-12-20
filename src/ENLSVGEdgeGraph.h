@@ -4,6 +4,7 @@
 #include "PathfindingDataTypes.h"
 #include <iostream>
 #include <vector>
+#include <limits>
 class Grid;
 class LineOfSightScanner;
 typedef int VertexID;
@@ -62,7 +63,7 @@ public:
     void markBothWays(MarkedEdges& markedEdges) const;
     inline bool isSkipVertex(VertexID vertexID) const {return skipEdges[vertexID].size() > 0;}
 
-    const int LEVEL_W = -1;
+    const int LEVEL_W = std::numeric_limits<VertexID>::max();
     const int sizeX;
     const int sizeY;
 
