@@ -16,22 +16,14 @@ namespace ENLSVG {
     // restorePar returns the parent pointer to its original value.
     inline VertexID restorePar(VertexID k) {return k < 0 ? -k-1 : k;}
 
-    struct AStarData {
-        bool visited = false;
-        double edgeWeightToGoal = -1.0;
-        VertexID parent = NO_PARENT;
-        double distance = POS_INF;
-
-        AStarData(): visited(false), edgeWeightToGoal(-1.0), parent(NO_PARENT), distance(POS_INF) {}
-    };
-
-
     Algorithm::Algorithm(const Grid& grid):
         grid(grid), scanner(grid), graph(grid, scanner) {
     }
 
 
-    Path Algorithm::computeSVGPath(const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs) const {
+    Path Algorithm::computeSVGPath(Memory& memory, const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs) const {
+        if (!memory.validate(graph)) std::cout << "VALIDATION ERROR: MEMORY USED IS INVALID" << std::endl;
+        
         // START: SPECIAL CASES - Handle special cases first.
         if (sx == ex && sy == ey) {
             Path path;
@@ -47,14 +39,14 @@ namespace ENLSVG {
 
 
         const size_t nNodes = graph.vertices.size();
-        std::vector<AStarData> nodes;
-        nodes.resize(nNodes);
-        IndirectHeap pq(nNodes);
+        memory.initialise();
+        IndirectHeap& pq = memory.pq;
+        pq.reinitialise();
 
         double goalDistance = POS_INF;
         int goalParent = NO_PARENT;
         { // START: INITIALISATION
-            ScannerStacks data;
+            ScannerStacks& data = memory.scannerStacks;
             {
                 const int startIndex = graph.nodeIndexes[sy][sx];
                 // Add all visible neighbours of start vertex
@@ -65,13 +57,12 @@ namespace ENLSVG {
                     int neighbour = graph.nodeIndexes[vn.y][vn.x];
 
                     double dist = grid.euclideanDistance(sx, sy, vn.x, vn.y);
-                    nodes[neighbour].distance = dist;
+                    memory.setDistance(neighbour, dist);
                     pq.decreaseKey(neighbour, dist + heuristic(neighbour, ex, ey));
                 }
                 if (startIndex != -1) {
-                    // IF start vertex is a VG node, add it too.
-                    pq.decreaseKey(startIndex, 0);
-                    nodes[startIndex].distance = 0;
+                    // If start vertex is a VG node, mark it as visited so we don't waste time on it.
+                    memory.setVisited(startIndex, true);
                 }
             }
             {
@@ -82,11 +73,11 @@ namespace ENLSVG {
                 for (size_t i=0; i<neighbours.size(); ++i) {
                     const GridVertex& vn = neighbours[i];
                     int neighbour = graph.nodeIndexes[vn.y][vn.x];
-                    nodes[neighbour].edgeWeightToGoal = grid.euclideanDistance(vn.x, vn.y, ex, ey);
+                    memory.setEdgeWeightToGoal(neighbour, grid.euclideanDistance(vn.x, vn.y, ex, ey));
                 }
                 if (goalIndex != -1) {
-                    // IF goal vertex is a VG node, add it too.
-                    nodes[goalIndex].edgeWeightToGoal = 0;
+                    // If goal vertex is a VG node, mark it as visited so we don't waste time on it.
+                    memory.setVisited(goalIndex, true);
                 }
             }
         } // END: INITIALISATION
@@ -96,27 +87,27 @@ namespace ENLSVG {
                 break; // Reached Goal.
             }
             int curr = pq.popMinIndex();
-            if (nodes[curr].visited) continue;
-            const double currDistance = nodes[curr].distance;
-            const int currParent = nodes[curr].parent;
-            nodes[curr].visited = true;
+            const double currDistance = memory.distance(curr);
+            const int currParent = restorePar(memory.parent(curr));
+            memory.setVisited(curr, true);
 
             const std::vector<EdgeID>& neighbours = graph.edgeLists[curr];
             for (size_t i=0;i<neighbours.size();++i) {
                 const auto& edge = graph.edges[neighbours[i]];
                 int dest = edge.destVertex;
+                if (memory.visited(dest)) continue;
                 double weight = edge.weight;
 
                 double destDistance = currDistance + weight;
-                if (destDistance < nodes[dest].distance && isTaut(currParent, curr, dest)) {
-                    nodes[dest].parent = curr;
-                    nodes[dest].distance = destDistance;
+                if (destDistance < memory.distance(dest) && isTaut(currParent, curr, dest)) {
+                    memory.setParent(dest, curr);
+                    memory.setDistance(dest, destDistance);
                     pq.decreaseKey(dest, destDistance + heuristic(dest, ex, ey));
                 }
             }
 
-            if (nodes[curr].edgeWeightToGoal != -1.0) {
-                double destDistance = currDistance + nodes[curr].edgeWeightToGoal;
+            if (memory.edgeWeightToGoal(curr) != -1.0) {
+                double destDistance = currDistance + memory.edgeWeightToGoal(curr);
                 if (destDistance < goalDistance) {
                     goalDistance = destDistance; // heuristic of goal should be 0
                     goalParent = curr;
@@ -124,13 +115,15 @@ namespace ENLSVG {
             }
         }
 
-        if (parentPtrs != nullptr) setParentPointers(nodes, goalParent, sx, sy, ex, ey, parentPtrs);
-        return getPath(nodes, goalParent, sx, sy, ex, ey);
+        if (parentPtrs != nullptr) setParentPointers(memory, goalParent, sx, sy, ex, ey, parentPtrs);
+        return getPath(memory, goalParent, sx, sy, ex, ey);
     }
 
 
 
-    Path Algorithm::computePath(const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs) const {
+    Path Algorithm::computePath(Memory& memory, const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs) const {
+        if (!memory.validate(graph)) std::cout << "VALIDATION ERROR: MEMORY USED IS INVALID" << std::endl;
+
         // START: SPECIAL CASES - Handle special cases first.
         if (sx == ex && sy == ey) {
             Path path;
@@ -144,17 +137,16 @@ namespace ENLSVG {
         }
         // END: SPECIAL CASES
 
-
         const size_t nNodes = graph.vertices.size();
-        std::vector<AStarData> nodes;
-        nodes.resize(nNodes, AStarData());
-        IndirectHeap pq(nNodes);
+        memory.initialise();
+        IndirectHeap& pq = memory.pq;
+        pq.reinitialise();
 
-        MarkedEdges markedEdges(graph.edges.size());
+        MarkedEdges& markedEdges = memory.markedEdges;
         double goalDistance = POS_INF;
         int goalParent = NO_PARENT;
         { // START: INITIALISATION
-            ScannerStacks data;
+            ScannerStacks& data = memory.scannerStacks;
             {
                 const int startIndex = graph.nodeIndexes[sy][sx];
                 // Add all visible neighbours of start vertex
@@ -165,12 +157,12 @@ namespace ENLSVG {
                     int neighbour = graph.nodeIndexes[vn.y][vn.x];
 
                     double dist = grid.euclideanDistance(sx, sy, vn.x, vn.y);
-                    nodes[neighbour].distance = dist;
+                    memory.setDistance(neighbour, dist);
                     pq.decreaseKey(neighbour, dist + heuristic(neighbour, ex, ey));
                 }
                 if (startIndex != -1) {
-                    // IF start vertex is a VG node, mark it as visited so we don't waste time on it.
-                    nodes[startIndex].visited = true;
+                    // If start vertex is a VG node, mark it as visited so we don't waste time on it.
+                    memory.setVisited(startIndex, true);
                 }
                 graph.markEdgesFrom(markedEdges, sx, sy, neighbours);
             }
@@ -182,11 +174,11 @@ namespace ENLSVG {
                 for (size_t i=0; i<neighbours.size(); ++i) {
                     const GridVertex& vn = neighbours[i];
                     int neighbour = graph.nodeIndexes[vn.y][vn.x];
-                    nodes[neighbour].edgeWeightToGoal = grid.euclideanDistance(vn.x, vn.y, ex, ey);
+                    memory.setEdgeWeightToGoal(neighbour, grid.euclideanDistance(vn.x, vn.y, ex, ey));
                 }
                 if (goalIndex != -1) {
-                    // IF goal vertex is a VG node, mark it as visited so we don't waste time on it.
-                    nodes[goalIndex].visited = true;
+                    // If goal vertex is a VG node, mark it as visited so we don't waste time on it.
+                    memory.setVisited(goalIndex, true);
                 }
                 graph.markEdgesFrom(markedEdges, ex, ey, neighbours);
             }
@@ -198,9 +190,9 @@ namespace ENLSVG {
                 break; // Reached Goal, or min value = POS_INF (can't find goal)
             }
             int curr = pq.popMinIndex();
-            const double currDistance = nodes[curr].distance;
-            const int currParent = restorePar(nodes[curr].parent);
-            nodes[curr].visited = true;
+            const double currDistance = memory.distance(curr);
+            const int currParent = restorePar(memory.parent(curr));
+            memory.setVisited(curr, true);
 
             // Traverse marked edges
             const std::vector<EdgeID>& neighbours = graph.edgeLists[curr];
@@ -209,13 +201,13 @@ namespace ENLSVG {
                 if (!markedEdges.isMarked[edgeId]) continue;
                 const auto& edge = graph.edges[edgeId];
                 int dest = edge.destVertex;
-                if (nodes[dest].visited) continue;
+                if (memory.visited(dest)) continue;
                 double weight = edge.weight;
 
                 double destDistance = currDistance + weight;
-                if (destDistance < nodes[dest].distance && isTaut(currParent, curr, dest)) {
-                    nodes[dest].parent = curr;
-                    nodes[dest].distance = destDistance;
+                if (destDistance < memory.distance(dest) && isTaut(currParent, curr, dest)) {
+                    memory.setParent(dest, curr);
+                    memory.setDistance(dest, destDistance);
                     pq.decreaseKey(dest, destDistance + heuristic(dest, ex, ey));
                 }
             }
@@ -225,19 +217,19 @@ namespace ENLSVG {
             for (size_t i=0;i<skipEdges.size();++i) {
                 const SkipEdge& edge = skipEdges[i];
                 int dest = edge.next;
-                if (nodes[dest].visited) continue;
+                if (memory.visited(dest)) continue;
                 double weight = edge.weight;
 
                 double destDistance = currDistance + weight;
-                if (destDistance < nodes[dest].distance && isTaut(currParent, curr, edge.immediateNext)) {
-                    nodes[dest].parent = negatePar(edge.immediateLast);
-                    nodes[dest].distance = destDistance;
+                if (destDistance < memory.distance(dest) && isTaut(currParent, curr, edge.immediateNext)) {
+                    memory.setParent(dest, negatePar(edge.immediateLast));
+                    memory.setDistance(dest, destDistance);
                     pq.decreaseKey(dest, destDistance + heuristic(dest, ex, ey));
                 }
             }
 
-            if (nodes[curr].edgeWeightToGoal != -1.0) {
-                double destDistance = currDistance + nodes[curr].edgeWeightToGoal;
+            if (memory.edgeWeightToGoal(curr) != -1.0) {
+                double destDistance = currDistance + memory.edgeWeightToGoal(curr);
                 if (destDistance < goalDistance) {
                     goalDistance = destDistance; // heuristic of goal should be 0
                     goalParent = curr;
@@ -246,14 +238,14 @@ namespace ENLSVG {
         }
 
         markedEdges.clear();
-        if (parentPtrs != nullptr) setParentPointers(nodes, goalParent, sx, sy, ex, ey, parentPtrs);
-        return getPath(nodes, goalParent, sx, sy, ex, ey);
+        if (parentPtrs != nullptr) setParentPointers(memory, goalParent, sx, sy, ex, ey, parentPtrs);
+        return getPath(memory, goalParent, sx, sy, ex, ey);
     }
 
 
 
 
-    Path Algorithm::getPath(const std::vector<AStarData>& nodes, int goalParent,
+    Path Algorithm::getPath(const Memory& memory, int goalParent,
     const int sx, const int sy, const int ex, const int ey) const {
         Path path;
 
@@ -275,7 +267,7 @@ namespace ENLSVG {
                 // Normal parent
                 path.push_back(graph.vertices[curr]);
                 prev = curr;
-                curr = nodes[curr].parent;
+                curr = memory.parent(curr);
             } else {
                 // Skip-edge parent
                 curr = negatePar(curr);
@@ -311,7 +303,7 @@ namespace ENLSVG {
                 }
 
                 prev = edges[currEdge].destVertex;
-                curr = nodes[prev].parent;
+                curr = memory.parent(prev);
             }
         }
 
@@ -324,7 +316,7 @@ namespace ENLSVG {
         return path;
     }
 
-    void Algorithm::setParentPointers(const std::vector<AStarData>& nodes,
+    void Algorithm::setParentPointers(const Memory& memory,
     int goalParent, int sx, int sy, int ex, int ey, ParentPtrs* parentPtrs) const {
 
         parentPtrs->goal = GridVertex(ex, ey);
@@ -335,12 +327,12 @@ namespace ENLSVG {
 
         current.clear();
         parent.clear();
-        for (size_t i=0; i<nodes.size(); ++i) {
-            if (nodes[i].distance == POS_INF) continue;
+        for (size_t i=0; i<memory.nNodes; ++i) {
+            if (memory.distance(i) == POS_INF) continue;
 
             current.push_back(graph.vertices[i]);
-            if (nodes[i].parent != NO_PARENT) {
-                parent.push_back(graph.vertices[restorePar(nodes[i].parent)]);
+            if (memory.parent(i) != NO_PARENT) {
+                parent.push_back(graph.vertices[restorePar(memory.parent(i))]);
             } else {
                 parent.push_back(GridVertex(sx, sy));
             }

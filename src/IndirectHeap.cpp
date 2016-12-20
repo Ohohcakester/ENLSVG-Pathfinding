@@ -24,6 +24,17 @@ void IndirectHeap::initialise(int capacity, double defaultKey) {
     }
 }
 
+void IndirectHeap::reinitialise() {
+    this->defaultKey = POS_INF;
+
+    if (ticketNumber == -1) {
+        std::fill(ticketCheck.begin(), ticketCheck.end(), 0);
+        ticketNumber = 1;
+    } else {
+        ticketNumber++;
+    }
+}
+
 IndirectHeap::IndirectHeap(int capacity): heapSize(0) {
     initialise(capacity, POS_INF);
 }

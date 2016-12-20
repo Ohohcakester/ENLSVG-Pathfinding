@@ -4,16 +4,92 @@
 #include "PathfindingDataTypes.h"
 #include "ENLSVGEdgeGraph.h"
 #include "LineOfSightScanner.h"
+#include "IndirectHeap.h"
 #include "Grid.h"
 #include <cmath>
 #include <limits>
+#include <vector>
 class Grid;
 
 namespace ENLSVG {
-    struct AStarData;
-
     // NO_PARENT should be positive to be immune to restorePar
     const VertexID NO_PARENT = std::numeric_limits<VertexID>::max();
+
+    struct AStarData {
+        bool visited = false;
+        double edgeWeightToGoal = -1.0;
+        VertexID parent = NO_PARENT;
+        double distance = POS_INF;
+
+        AStarData(): visited(false), edgeWeightToGoal(-1.0), parent(NO_PARENT), distance(POS_INF) {}
+    };
+
+    class Memory {
+    public:
+        const size_t nEdges;
+        const size_t nNodes;
+        const AStarData def; // default values
+        std::vector<AStarData> nodes;
+        std::vector<int> ticketCheck;
+        int ticketNumber;
+
+        ScannerStacks scannerStacks;
+        MarkedEdges markedEdges;
+        IndirectHeap pq;
+
+        Memory(const VisibilityGraph& graph): nEdges(graph.edges.size()),
+        nNodes(graph.vertices.size()), markedEdges(nEdges), pq(nNodes) {
+            const size_t nNodes = graph.vertices.size();
+            nodes.resize(nNodes);
+            ticketCheck.resize(nNodes, 0);
+            ticketNumber = 1;
+        }
+
+        void initialise() {
+            if (ticketNumber != -1) {
+                ++ticketNumber;
+            } else {
+                std::fill(ticketCheck.begin(), ticketCheck.end(), 0);
+                ticketNumber = 1;
+            }
+        }
+
+        bool validate(const VisibilityGraph& graph) {
+            return nNodes == graph.vertices.size() && nEdges == graph.edges.size();
+        }
+
+        inline bool visited(size_t index) const {return ticketCheck[index] == ticketNumber ? nodes[index].visited : def.visited;}
+        inline double edgeWeightToGoal(size_t index) const {return ticketCheck[index] == ticketNumber ? nodes[index].edgeWeightToGoal : def.edgeWeightToGoal;}
+        inline VertexID parent(size_t index) const {return ticketCheck[index] == ticketNumber ? nodes[index].parent : def.parent;}
+        inline double distance(size_t index) const {return ticketCheck[index] == ticketNumber ? nodes[index].distance : def.distance;}
+
+        inline void updateData(size_t index) {
+            if (ticketCheck[index] != ticketNumber) {
+                nodes[index] = def;
+                ticketCheck[index] = ticketNumber;
+            }
+        }
+        
+        inline void setVisited(size_t index, bool value) {
+            updateData(index);
+            nodes[index].visited = value;
+        }
+        
+        inline void setEdgeWeightToGoal(size_t index, double value) {
+            updateData(index);
+            nodes[index].edgeWeightToGoal = value;
+        }
+        
+        inline void setParent(size_t index, VertexID value) {
+            updateData(index);
+            nodes[index].parent = value;
+        }
+        
+        inline void setDistance(size_t index, double value) {
+            updateData(index);
+            nodes[index].distance = value;
+        }
+    };
 
     class Algorithm {
 
@@ -26,8 +102,8 @@ namespace ENLSVG {
 
         Algorithm(const Grid& grid);
 
-        Path computePath(const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs) const;
-        Path computeSVGPath(const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs = nullptr) const;
+        Path computePath(Memory& memory, const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs = nullptr) const;
+        Path computeSVGPath(Memory& memory, const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs = nullptr) const;
 
         inline double heuristic(int index, int ex, int ey) const {
             int dx = graph.vertices[index].x - ex;
@@ -49,8 +125,8 @@ namespace ENLSVG {
         }
 
     private:
-        Path getPath(const std::vector<AStarData>& nodes, int goalParent, const int sx, const int sy, const int ex, const int ey) const;
-        void setParentPointers(const std::vector<AStarData>& nodes, int goalParent, int sx, int sy, int ex, int ey, ParentPtrs* parentPtrs) const;
+        Path getPath(const Memory& memory, int goalParent, const int sx, const int sy, const int ex, const int ey) const;
+        void setParentPointers(const Memory& memory, int goalParent, int sx, int sy, int ex, int ey, ParentPtrs* parentPtrs) const;
     };
 }
 

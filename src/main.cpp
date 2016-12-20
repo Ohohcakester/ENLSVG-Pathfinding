@@ -13,14 +13,15 @@ int main() {
     //RandomGridGenerator::generateRandomGrid(grid, 0.5f);
     RandomGridGenerator::generateAutomataGrid(grid, 0.5f, 5, 1.f);
 
-    ENLSVG::ENLSVGEdgeAlgorithm enlsvg(grid);
+    ENLSVG::Algorithm enlsvg(grid);
+    ENLSVG::Memory memory(enlsvg.graph);
 
     const int sx = 152;
     const int sy = 80;
     const int ex = 48;
     const int ey = 40;
     ParentPtrs parentPtrs;
-    Path path = enlsvg.computePath(sx, sy, ex, ey, &parentPtrs);
+    Path path = enlsvg.computePath(memory, sx, sy, ex, ey, &parentPtrs);
 
     Drawer drawer(grid, 5);
     drawer.drawGrid(grid);

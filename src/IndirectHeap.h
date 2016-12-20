@@ -9,6 +9,7 @@ class IndirectHeap {
 
 public:
     void initialise(int size, double defaultKey);
+    void reinitialise();
     IndirectHeap(int capacity);
     void decreaseKey(int outIndex, double newKey);
     int popMinIndex();
