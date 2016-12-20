@@ -162,15 +162,21 @@ void ENLSVGEdgeGraph::setupSkipEdges() {
             // follow edge till next skip vertex.
             double totalWeight;
             VertexID nextVertex;
-            followLevelWPathToNextSkipVertex(edgeList[j], totalWeight, nextVertex, isSkipVertex);
-            skipEdges[curr].push_back(SkipEdge(nextVertex, totalWeight));
+            VertexID immediateNext;
+            VertexID immediateLast;
+            followLevelWPathToNextSkipVertex(edgeList[j], totalWeight, nextVertex, immediateNext, immediateLast, isSkipVertex);
+            skipEdges[curr].push_back(SkipEdge(nextVertex, totalWeight, immediateNext, immediateLast));
         }
     }
 }
 
-void ENLSVGEdgeGraph::followLevelWPathToNextSkipVertex(EdgeID firstEdge, double& totalWeight, VertexID& nextVertex, const std::vector<bool>& isSkipVertex) const {
+void ENLSVGEdgeGraph::followLevelWPathToNextSkipVertex(EdgeID firstEdge,
+    double& totalWeight, VertexID& nextVertex, VertexID& immediateNext,
+    VertexID& immediateLast, const std::vector<bool>& isSkipVertex) const {
     EdgeID currEdge = firstEdge;
     totalWeight = edges[currEdge].weight; // RETURN VALUE
+    immediateNext = edges[currEdge].destVertex; // RETURN VALUE
+
     while (!isSkipVertex[edges[currEdge].destVertex]) {
         const auto& tautOutgoingEdges = edges[currEdge].tautOutgoingEdges;
 
@@ -185,6 +191,7 @@ void ENLSVGEdgeGraph::followLevelWPathToNextSkipVertex(EdgeID firstEdge, double&
         totalWeight += edges[currEdge].weight;
         // This should not infinite loop done correctly.
     }
+    immediateLast = edges[currEdge].sourceVertex; // RETURN VALUE
     nextVertex = edges[currEdge].destVertex; // RETURN VALUE
 }
 

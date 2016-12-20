@@ -11,9 +11,9 @@ typedef size_t EdgeID;
 
 struct ENLSVGEdge {
     EdgeID oppositeEdge;
-    VertexID sourceVertex;
-    VertexID destVertex;
-    double weight;
+    const VertexID sourceVertex;
+    const VertexID destVertex;
+    const double weight;
     int level;
     std::vector<EdgeID> tautOutgoingEdges;
 
@@ -24,10 +24,13 @@ struct ENLSVGEdge {
 };
 
 struct SkipEdge {
-    VertexID next;
-    double weight;
+    const VertexID next;
+    const double weight;
+    const VertexID immediateNext; // immediate vertex just after current
+    const VertexID immediateLast; // immediate vertex just before next.
 
-    SkipEdge(VertexID next, double weight): next(next), weight(weight) {}
+    SkipEdge(VertexID next, double weight, VertexID imNext, VertexID imLast)
+    : next(next), weight(weight), immediateNext(imNext), immediateLast(imLast) {}
 };
 
 struct MarkedEdges {
@@ -84,7 +87,9 @@ private:
     void buildHierarchy();
     void computeAllEdgeLevels();
     void setupSkipEdges();
-    void followLevelWPathToNextSkipVertex(EdgeID firstEdge, double& totalWeight, VertexID& nextVertex, const std::vector<bool>& isSkipVertex) const;
+    void followLevelWPathToNextSkipVertex(EdgeID firstEdge,
+        double& totalWeight, VertexID& nextVertex, VertexID& immediateNext,
+        VertexID& immediateLast, const std::vector<bool>& isSkipVertex) const;
 };
 
 
