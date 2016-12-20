@@ -4,6 +4,7 @@
 // Runs in constant time if reinitialising heap of same size.
 void IndirectHeap::initialise(int capacity, double defaultKey) {
     this->defaultKey = defaultKey;
+    this->heapSize = 0;
 
     if (ticketCheck.size() != capacity) {
         keyList.resize(capacity);
@@ -26,6 +27,7 @@ void IndirectHeap::initialise(int capacity, double defaultKey) {
 
 void IndirectHeap::reinitialise() {
     this->defaultKey = POS_INF;
+    this->heapSize = 0;
 
     if (ticketNumber == -1) {
         std::fill(ticketCheck.begin(), ticketCheck.end(), 0);
