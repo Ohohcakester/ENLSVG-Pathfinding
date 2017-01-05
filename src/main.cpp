@@ -2,7 +2,7 @@
 #include "Grid.h"
 #include "Drawer.h"
 #include "RandomGridGenerator.h"
-#include "ENLSVGEdgeAlgorithm.h"
+#include "ENLSVGAlgorithm.h"
 #include "PathfindingDataTypes.h"
 
 int main() {

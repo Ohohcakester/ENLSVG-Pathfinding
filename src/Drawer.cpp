@@ -1,7 +1,7 @@
 #include "Drawer.h"
 #include "Grid.h"
 #include "Image.h"
-#include "ENLSVGEdgeGraph.h"
+#include "ENLSVGGraph.h"
 
 Drawer::Drawer(const Grid& grid, int scale)
 : gridSizeX(grid.sizeX), gridSizeY(grid.sizeY), imgSizeX(grid.sizeX*scale),

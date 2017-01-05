@@ -1,5 +1,5 @@
-#ifndef _ENLSVG_EDGE_GRAPH_H_
-#define _ENLSVG_EDGE_GRAPH_H_
+#ifndef _ENLSVG_GRAPH_H_
+#define _ENLSVG_GRAPH_H_
 
 #include "PathfindingDataTypes.h"
 #include <iostream>

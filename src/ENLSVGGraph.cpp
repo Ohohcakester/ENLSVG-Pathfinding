@@ -1,4 +1,4 @@
-#include "ENLSVGEdgeGraph.h"
+#include "ENLSVGGraph.h"
 #include "LineOfSightScanner.h"
 #include "Grid.h"
 #include <algorithm>

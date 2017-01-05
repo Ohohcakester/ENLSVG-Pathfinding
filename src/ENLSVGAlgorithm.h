@@ -1,8 +1,8 @@
-#ifndef _ENLSVG_EDGE_ALGORITHM_H_
-#define _ENLSVG_EDGE_ALGORITHM_H_
+#ifndef _ENLSVG_ALGORITHM_H_
+#define _ENLSVG_ALGORITHM_H_
 
 #include "PathfindingDataTypes.h"
-#include "ENLSVGEdgeGraph.h"
+#include "ENLSVGGraph.h"
 #include "LineOfSightScanner.h"
 #include "IndirectHeap.h"
 #include "Grid.h"

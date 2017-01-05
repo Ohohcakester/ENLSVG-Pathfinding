@@ -1,5 +1,5 @@
-#include "ENLSVGEdgeAlgorithm.h"
-#include "ENLSVGEdgeGraph.h"
+#include "ENLSVGAlgorithm.h"
+#include "ENLSVGGraph.h"
 #include "LineOfSightScanner.h"
 #include "Grid.h"
 #include "IndirectHeap.h"
