@@ -29,7 +29,7 @@ int main() {
     Path path = enlsvg.computePath(memory, sx, sy, ex, ey, &parentPtrs);
 
     //std::cout << "Path hops : " << path.size() << std::endl;
-    Drawer drawer(grid, 5);
+    Drawer drawer(grid, 1);
     drawer.drawGrid(grid);
     //drawer.drawVisibilityGraph(enlsvg.graph);
     drawer.drawParentPointers(parentPtrs);
