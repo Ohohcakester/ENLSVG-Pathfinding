@@ -1,7 +1,6 @@
 #include "Drawer.h"
 #include "Grid.h"
 #include "Image.h"
-#include "ENLSVGGraph.h"
 #include "ENLSVGEdgeGraph.h"
 
 Drawer::Drawer(const Grid& grid, int scale)
@@ -118,21 +117,6 @@ void Drawer::drawGrid(const Grid& grid) {
                     img.setPixel(c,i,j);
                 }
             }
-        }
-    }
-}
-
-void Drawer::drawVisibilityGraph(const VertexENLSVG::VisibilityGraph& graph) {
-    TGAImage& img = *imgPtr;
-
-    Colour c = Colours::LIME;
-    const std::vector<GridVertex>& vertices = graph.vertices;
-    for (size_t i=0; i<vertices.size(); ++i) {
-        const GridVertex& u = vertices[i];
-        const std::vector<VertexENLSVG::OutgoingEdge>& edgeList = graph.edgeLists[i];
-        for (size_t j=0; j<edgeList.size(); ++j) {
-            const GridVertex& v = vertices[edgeList[j].dest];
-            drawLine(u.x*scale, u.y*scale, v.x*scale, v.y*scale, c);
         }
     }
 }
