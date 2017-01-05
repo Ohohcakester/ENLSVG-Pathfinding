@@ -263,7 +263,7 @@ namespace ENLSVG {
         // Assumption: first edge from goal is not a skip-edge.
         // Loop invariant: prev is nonnegative.
         while (curr != NO_PARENT) {
-            if (curr > 0) {
+            if (curr >= 0) {
                 // Normal parent
                 path.push_back(graph.vertices[curr]);
                 prev = curr;
