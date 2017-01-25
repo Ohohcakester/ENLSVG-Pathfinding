@@ -17,7 +17,7 @@ class Grid;
 namespace ENLSVG {
 
     // NO_PARENT should be positive to be immune to restorePar
-    const VertexID NO_PARENT = std::numeric_limits<VertexID>::max();
+    static constexpr VertexID NO_PARENT = std::numeric_limits<VertexID>::max();
 
     struct AStarData {
         bool visited = false;

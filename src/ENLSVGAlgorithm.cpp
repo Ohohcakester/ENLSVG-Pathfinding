@@ -5,8 +5,6 @@
 #include "IndirectHeap.h"
 #include <algorithm>
 
-//const double POS_INF = std::numeric_limits<double>::infinity();
-
 namespace Pathfinding { namespace ENLSVG {
 
     // negatePar makes parent pointers negative to indicate that the parent is a skip-edge.

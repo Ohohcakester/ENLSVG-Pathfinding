@@ -3,9 +3,10 @@
 
 #include <vector>
 #include <limits>
-const double POS_INF = std::numeric_limits<double>::infinity();
 
 namespace Pathfinding {
+
+constexpr double POS_INF = std::numeric_limits<double>::infinity();
 
 class IndirectHeap {
 
