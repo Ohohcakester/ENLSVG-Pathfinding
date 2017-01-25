@@ -1,6 +1,7 @@
 #ifndef _DRAWER_H_
 #define _DRAWER_H_
 
+#include <algorithm>
 #include <string>
 #include "PathfindingDataTypes.h"
 class Grid;
