@@ -3,6 +3,9 @@
 
 #include <string>
 #include "PathfindingDataTypes.h"
+
+namespace Pathfinding {
+
 class Grid;
 class TGAImage;
 namespace ENLSVG { class VisibilityGraph; }
@@ -33,6 +36,6 @@ public:
 private:
     TGAImage* imgPtr;
 };
-
+}
 
 #endif

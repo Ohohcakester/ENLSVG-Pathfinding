@@ -3,6 +3,8 @@
 #include "Image.h"
 #include "ENLSVGGraph.h"
 
+namespace Pathfinding {
+
 Drawer::Drawer(const Grid& grid, int scale)
 : gridSizeX(grid.sizeX), gridSizeY(grid.sizeY), imgSizeX(grid.sizeX*scale),
 imgSizeY(grid.sizeY*scale), scale(scale), imgPtr(new TGAImage(imgSizeX, imgSizeY)) {
@@ -249,4 +251,5 @@ void Drawer::drawParentPointers(const ParentPtrs& ptrs) {
         y2 = parent[i].y;
         drawLine(x1*scale, y1*scale, x2*scale, y2*scale, c);
     }
+}
 }

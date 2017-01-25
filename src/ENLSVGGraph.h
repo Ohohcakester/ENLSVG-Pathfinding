@@ -5,6 +5,9 @@
 #include <iostream>
 #include <vector>
 #include <limits>
+
+namespace Pathfinding { 
+
 class Grid;
 class LineOfSightScanner;
 
@@ -91,7 +94,7 @@ namespace ENLSVG {
             double& totalWeight, VertexID& nextVertex, VertexID& immediateNext,
             VertexID& immediateLast, const std::vector<bool>& isSkipVertex) const;
     };
-}
+}}
 
 
 #endif

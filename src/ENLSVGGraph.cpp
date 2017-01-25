@@ -3,7 +3,7 @@
 #include "Grid.h"
 #include <algorithm>
 
-using namespace ENLSVG;
+namespace Pathfinding {
 
 namespace ENLSVG {
     VisibilityGraph::VisibilityGraph(const Grid& grid, const LineOfSightScanner& scanner):
@@ -249,4 +249,4 @@ namespace ENLSVG {
             if (!markedEdges.isMarked[opp]) markedEdges.mark(opp);
         }
     }
-}
+}}

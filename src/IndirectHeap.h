@@ -5,6 +5,8 @@
 #include <limits>
 const double POS_INF = std::numeric_limits<double>::infinity();
 
+namespace Pathfinding {
+
 class IndirectHeap {
 
 public:
@@ -179,5 +181,7 @@ public:
         return heapSize <= 0;
     }
 };
+
+}
 
 #endif

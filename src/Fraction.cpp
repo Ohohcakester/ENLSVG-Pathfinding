@@ -3,7 +3,9 @@
 #include <sstream>
 #include "Fraction.h"
 using namespace std;
-    
+
+namespace Pathfinding {
+
 Fraction operator*(const Fraction& o, const Fraction& o2) {
     return Fraction(o.n*o2.n, o.d*o2.d);
 }
@@ -71,4 +73,6 @@ Fraction parseFraction(string s) {
 
         return Fraction(n,d);
     }
+}
+
 }

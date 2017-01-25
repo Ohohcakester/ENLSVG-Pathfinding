@@ -3,6 +3,8 @@
 #include "RandomNumberGenerator.h"
 #include <vector>
 
+namespace Pathfinding {
+
 void RandomGridGenerator::generateRandomGrid(Grid& grid, const float percentBlocked) {
     const int sizeX = grid.sizeX;
     const int sizeY = grid.sizeY;
@@ -207,4 +209,6 @@ void RandomGridGenerator::runAutomataIterationBlockedBorders(const int resolutio
             count[y][x] = nBlocked;
         }
     }
+}
+
 }

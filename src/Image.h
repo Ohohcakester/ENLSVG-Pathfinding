@@ -13,6 +13,8 @@ using namespace std;
  * https://danielbeard.wordpress.com/2011/06/06/image-saving-code-c/
  */
 
+namespace Pathfinding {
+
 //data structures
 struct Colour {
 	unsigned char r,g,b,a;
@@ -79,6 +81,8 @@ namespace Colours {
     extern const Colour AQUA;
     extern const Colour TEAL;
     extern const Colour PINK;
+}
+
 }
 
 #endif

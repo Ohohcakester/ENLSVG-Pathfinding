@@ -7,9 +7,8 @@
 
 //const double POS_INF = std::numeric_limits<double>::infinity();
 
-using namespace ENLSVG;
+namespace Pathfinding { namespace ENLSVG {
 
-namespace ENLSVG {
     // negatePar makes parent pointers negative to indicate that the parent is a skip-edge.
     // note that negatePar(negatePar(k)) == k.
     inline VertexID negatePar(VertexID k) {return -k-1;}
@@ -338,4 +337,4 @@ namespace ENLSVG {
             }
         }
     }
-}
+}}

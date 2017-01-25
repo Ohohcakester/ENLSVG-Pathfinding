@@ -5,6 +5,8 @@
 #include <vector>
 #include <cmath>
 
+namespace Pathfinding {
+
 class Grid {
 public:
     int sizeX;
@@ -249,6 +251,8 @@ private:
 public:
     
 };
+
+}
 
 
 #endif

@@ -5,6 +5,8 @@
  * https://danielbeard.wordpress.com/2011/06/06/image-saving-code-c/
  */
 
+namespace Pathfinding {
+
 TGAImage::TGAImage(): m_width(0), m_height(0) {}
 
 TGAImage::TGAImage(short width, short height): m_width(width), m_height(height) {
@@ -72,4 +74,6 @@ namespace Colours {
     const Colour AQUA(0,127,255);
     const Colour TEAL(0,127,127);
     const Colour PINK(255,192,203);
+}
+
 }

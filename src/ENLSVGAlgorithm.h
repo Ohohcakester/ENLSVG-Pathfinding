@@ -9,9 +9,13 @@
 #include <cmath>
 #include <limits>
 #include <vector>
+
+namespace Pathfinding {
+
 class Grid;
 
 namespace ENLSVG {
+
     // NO_PARENT should be positive to be immune to restorePar
     const VertexID NO_PARENT = std::numeric_limits<VertexID>::max();
 
@@ -132,6 +136,7 @@ namespace ENLSVG {
         Path getPath(const Memory& memory, int goalParent, const int sx, const int sy, const int ex, const int ey) const;
         void setParentPointers(const Memory& memory, int goalParent, int sx, int sy, int ex, int ey, ParentPtrs* parentPtrs) const;
     };
+}
 }
 
 #endif
