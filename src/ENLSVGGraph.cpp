@@ -110,7 +110,7 @@ namespace ENLSVG {
             for (size_t i=0;i<currentLevelEdges.size(); ++i) {
                 EdgeID curr = currentLevelEdges[i];
                 EdgeID opp = opposite(curr);
-
+                
                 edges[curr].level = currLevel;
                 edges[opp].level = currLevel;
 
@@ -199,7 +199,6 @@ namespace ENLSVG {
 
     void VisibilityGraph::markEdgesFrom(MarkedEdges& markedEdges, const int sx, const int sy, const std::vector<GridVertex>& neighbours) const {
         std::vector<EdgeID> edgeQueue;
-        size_t i = 0;
 
         for (size_t i=0; i<neighbours.size(); ++i) {
             const GridVertex& u = neighbours[i];
@@ -217,8 +216,9 @@ namespace ENLSVG {
             }
         }
 
-        while (i < edgeQueue.size()) {
-            EdgeID curr = edgeQueue[i];
+        size_t head = 0;
+        while (head < edgeQueue.size()) {
+            EdgeID curr = edgeQueue[head];
 
             const int currLevel = edges[curr].level;
             const auto& tautOutgoingEdges = edges[curr].tautOutgoingEdges;
@@ -236,7 +236,7 @@ namespace ENLSVG {
                 }
             }
 
-            ++i;
+            ++head;
         }
     }
 
