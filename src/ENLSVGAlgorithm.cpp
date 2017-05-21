@@ -13,6 +13,18 @@ namespace Pathfinding { namespace ENLSVG {
     // restorePar returns the parent pointer to its original value.
     inline VertexID restorePar(VertexID k) {return k < 0 ? -k-1 : k;}
 
+    Memory::Memory(const Algorithm& algo):
+        nEdges(algo.nEdges()),
+        nNodes(algo.nVertices()),
+        markedEdges(nEdges),
+        pq(nNodes) {
+        const size_t nNodes = algo.nVertices();
+        nodes.resize(nNodes);
+        ticketCheck.resize(nNodes, 0);
+        ticketNumber = 1;
+    }
+
+
     Algorithm::Algorithm(const Grid& grid):
         grid(grid), scanner(grid), graph(grid, scanner) {
     }
@@ -334,5 +346,13 @@ namespace Pathfinding { namespace ENLSVG {
                 parent.push_back(GridVertex(sx, sy));
             }
         }
+    }
+
+    size_t Algorithm::nVertices() const {
+        return graph.vertices.size();
+    }
+
+    size_t Algorithm::nEdges() const {
+        return graph.edges.size();
     }
 }}

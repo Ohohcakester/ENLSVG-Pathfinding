@@ -14,7 +14,7 @@ int main() {
     Pathfinding::RandomGridGenerator::generateAutomataGrid(grid, 0.5f, 5, 1.f);
 
     Pathfinding::ENLSVG::Algorithm enlsvg(grid);
-    Pathfinding::ENLSVG::Memory memory(enlsvg.graph);
+    Pathfinding::ENLSVG::Memory memory(enlsvg);
 
     const int sx = 152;
     const int sy = 80;
@@ -31,7 +31,7 @@ int main() {
     //std::cout << "Path hops : " << path.size() << std::endl;
     Pathfinding::Drawer drawer(grid, 1);
     drawer.drawGrid(grid);
-    //drawer.drawVisibilityGraph(enlsvg.graph);
+    //drawer.drawVisibilityGraph(enlsvg);
     drawer.drawParentPointers(parentPtrs);
     drawer.drawPath(path);
     drawer.drawPoint(sx, sy);

@@ -18,6 +18,7 @@ namespace ENLSVG {
 
     // NO_PARENT should be positive to be immune to restorePar
     static constexpr VertexID NO_PARENT = std::numeric_limits<VertexID>::max();
+    class Algorithm;
 
     struct AStarData {
         bool visited = false;
@@ -32,13 +33,7 @@ namespace ENLSVG {
         friend class Algorithm;
         
     public:
-        Memory(const VisibilityGraph& graph): nEdges(graph.edges.size()),
-        nNodes(graph.vertices.size()), markedEdges(nEdges), pq(nNodes) {
-            const size_t nNodes = graph.vertices.size();
-            nodes.resize(nNodes);
-            ticketCheck.resize(nNodes, 0);
-            ticketNumber = 1;
-        }
+        Memory(const Algorithm& algo);
 
     private:
         const size_t nEdges;
@@ -104,15 +99,18 @@ namespace ENLSVG {
     private:
         const Grid& grid;
         const LineOfSightScanner scanner;
-    public:
         const VisibilityGraph graph; //Note: This must be defined after scanner and grid.
 
-
+    public:
         Algorithm(const Grid& grid);
 
         Path computePath(Memory& memory, const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs = nullptr) const;
         Path computeSVGPath(Memory& memory, const int sx, const int sy, const int ex, const int ey, ParentPtrs* parentPtrs = nullptr) const;
 
+        size_t nVertices() const;
+        size_t nEdges() const;
+
+    private:
         inline double heuristic(int index, int ex, int ey) const {
             int dx = graph.vertices[index].x - ex;
             int dy = graph.vertices[index].y - ey;
@@ -132,7 +130,6 @@ namespace ENLSVG {
             return grid.isTaut(x1, y1, x2, y2, x3, y3);
         }
 
-    private:
         Path getPath(const Memory& memory, int goalParent, const int sx, const int sy, const int ex, const int ey) const;
         void setParentPointers(const Memory& memory, int goalParent, int sx, int sy, int ex, int ey, ParentPtrs* parentPtrs) const;
     };
