@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "Drawer.h"
 #include "Grid.h"
 #include "Image.h"

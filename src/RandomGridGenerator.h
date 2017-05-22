@@ -1,8 +1,6 @@
 #ifndef _RANDOM_GRID_GENERATOR_H_
 #define _RANDOM_GRID_GENERATOR_H_
 
-#include <algorithm>
-
 class Grid;
 
 class RandomGridGenerator {

@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "Grid.h"
 #include "RandomGridGenerator.h"
 #include "RandomNumberGenerator.h"
@@ -58,12 +59,8 @@ void RandomGridGenerator::generateAutomataGrid(Grid& grid, const float percentBl
         // bin 0: <= low
         // bin n+1: >= low+range
         // bin i: low + d*(i-1) < x < low + d*(i)
-        int bins[nBins+2];
-        float binAverage[nBins+2];
-        for (int i=0;i<nBins+2;++i) {
-            bins[i] = 0;
-            binAverage[i] = 0;
-        }
+        std::vector<int> bins(nBins+2, 0);
+        std::vector<float> binAverage(nBins+2, 0);
         
         const float low = mean*0.5f;
         const float range = (mean + maxCount)/2 - low;
