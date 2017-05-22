@@ -4,6 +4,8 @@
 #include <cstddef>
 #include <vector>
 
+namespace Pathfinding {
+
 struct GridVertex {
     int x;
     int y;
@@ -23,5 +25,7 @@ struct ParentPtrs {
 
 typedef int VertexID;
 typedef size_t EdgeID;
+
+}
 
 #endif

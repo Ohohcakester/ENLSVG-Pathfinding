@@ -4,6 +4,9 @@
 #include <algorithm>
 #include "PathfindingDataTypes.h"
 #include "Fraction.h"
+
+namespace Pathfinding {
+
 class Grid;
 
 //typedef double Rational;
@@ -92,5 +95,7 @@ private:
     void generateAndSplitIntervals(ScannerStacks& data, int checkY, int newY, int sx, int sy, Rational leftBound, Rational rightBound, bool leftInclusive, bool rightInclusive) const;
 
 };
+
+}
 
 #endif

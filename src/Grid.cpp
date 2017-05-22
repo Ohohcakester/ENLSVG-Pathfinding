@@ -2,6 +2,8 @@
 #include "Grid.h"
 #include "RandomNumberGenerator.h"
 
+namespace Pathfinding {
+
 Grid::Grid(int sizeX, int sizeY): sizeX(sizeX), sizeY(sizeY), totalSize(sizeX*sizeY) {
     blocked.resize(sizeY);
     for (size_t y=0;y<sizeY;++y) {
@@ -16,4 +18,6 @@ void Grid::printGrid() const {
         }
         std::cout << std::endl;
     }
+}
+
 }

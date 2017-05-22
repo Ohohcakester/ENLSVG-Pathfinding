@@ -1,6 +1,8 @@
 #include "IndirectHeap.h"
 #include <iostream>
 
+namespace Pathfinding {
+
 // Runs in constant time if reinitialising heap of same size.
 void IndirectHeap::initialise(int capacity, double defaultKey) {
     this->defaultKey = defaultKey;
@@ -93,4 +95,6 @@ int IndirectHeap::popMinIndex() {
     bubbleDown(0);
     
     return s;
+}
+
 }

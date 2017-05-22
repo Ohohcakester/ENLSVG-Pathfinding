@@ -5,6 +5,8 @@
 #include <sstream>
 using namespace std;
 
+namespace Pathfinding {
+
 struct Fraction {
     int n, d;
 
@@ -154,5 +156,7 @@ Fraction operator-(int o, const Fraction& o2);
 ostream& operator<< (ostream& stream, Fraction& obj);
 
 Fraction parseFraction(string s);
+
+}
 
 #endif

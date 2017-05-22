@@ -1,6 +1,7 @@
 #include "LineOfSightScanner.h"
 #include "Grid.h"
 
+namespace Pathfinding {
 
 LineOfSightScanner::LineOfSightScanner(const Grid& grid): grid(grid), sizeX(grid.sizeX), sizeY(grid.sizeY) {
     computeExtents();
@@ -444,4 +445,6 @@ void LineOfSightScanner::generateAndSplitIntervals(ScannerStacks& data, int chec
             data.stackPush(ScanInterval(newY, rightBound, rightBound, true, true));
         }
     }
+}
+
 }

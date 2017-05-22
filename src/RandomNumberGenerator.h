@@ -4,6 +4,8 @@
 #include <random>
 #include <ctime>
 
+namespace Pathfinding {
+
 class RNG {
     std::default_random_engine generator;
 
@@ -27,5 +29,7 @@ public:
 };
 
 extern RNG global_rng;
+
+}
 
 #endif
