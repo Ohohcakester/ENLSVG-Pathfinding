@@ -1,6 +1,6 @@
 # ENLSVG-Pathfinding
 
-An implementation of the Edge N-Level Sparse Visibility Graph algorithm for extremely fast optimal Any-Angle Pathfinding on grid maps. (on the order of 1 millisecond per path computation on 6000x6000 grids)
+An implementation of the Edge N-Level Sparse Visibility Graph algorithm for extremely fast optimal Any-Angle Pathfinding on grid maps. (on the order of a millisecond per path computation on 6000x6000 grids)
 
 The ENLSVG algorithm requires a pre-processing step, which may take some time, depending on the size of the grid map.
 
