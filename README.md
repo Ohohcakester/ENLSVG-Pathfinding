@@ -12,14 +12,14 @@ The ENLSVG algorithm requires a pre-processing step, which may take some time, d
 # Usage
 
 Include this for everything you need:
-```
+```cpp
 #include <Pathfinding/ENLSVG.h>
 ```
 
 ## Quick Start
 
 Sample Code:
-```
+```cpp
 // 1200 x 1000 tiles
 int sizeX = 1200;
 int sizeY = 1000;
@@ -88,7 +88,7 @@ Useful API:
   
 
 Sample code for initialising a grid object:
-```
+```cpp
 // 1200 x 1000 tiles
 int sizeX = 1200;
 int sizeY = 1000;
@@ -121,7 +121,7 @@ We provide two functions for generating random grids.
     * `float resolutionMultiplier`: The larger the resolutionMultiplier, the larger the "islands" will be. A smaller resolutionMultiplier will generate a map with many small details.
 
 Sample code for initialising a random grid:
-```
+```cpp
 // 1200 x 1000 tiles
 int sizeX = 1200;
 int sizeY = 1000;
@@ -136,7 +136,7 @@ Pathfinding::RandomGridGenerator::generateAutomataGrid(grid, 0.37f, 5, .15f);
 ## Data Types
 
 **GridVertex**: a tuple of two ints that represents a grid vertex. This struct is self-explanatory.
-```
+```cpp
 struct GridVertex {
     int x;
     int y;
@@ -147,21 +147,21 @@ struct GridVertex {
 ```
 
 **Path**: This typedef is self-explanatory.
-```
+```cpp
 typedef std::vector<GridVertex> Path;
 ```
 
 ## ENLSVG Algorithm
 
 The following function is used to compute a Path between two grid vertices:
-```
+```cpp
 Pathfinding::Path Pathfinding::ENLSVG::Algorithm::computePath(Memory& memory, int sx, int sy, int ex, int ey) const;
 ```
 
 The following example shows how it is used.
 
 Sample usage:
-```
+```cpp
 // We assume that we have a grid object "Pathfinding::Grid grid" like defined above.
 
 // Preprocess the grid to build a visibility graph.
@@ -188,7 +188,7 @@ To make the best use out of the algorithm, it is recommended to store the `algo`
 The function `algo.computePath(...)` is thread-safe. However, a separate copy of the Pathfinding::ENLSVG::Memory object must be used for each thread, if you want to do path computations in parallel.
 
 For example:
-```
+```cpp
 // Stored Data
 Pathfinding::ENLSVG::Algorithm algo(grid);
 Pathfinding::ENLSVG::Memory memory1(algo);
@@ -196,19 +196,19 @@ Pathfinding::ENLSVG::Memory memory2(algo);
 Pathfinding::ENLSVG::Memory memory3(algo);
 ```
 
-```
+```cpp
 // Thread 1
 Pathfinding::Path path = algo.computePath(memory1, startX, startY, endX, endY);
 // do something with the path
 ```
 
-```
+```cpp
 // Thread 2
 Pathfinding::Path path = algo.computePath(memory2, startX, startY, endX, endY);
 // do something with the path
 ```
 
-```
+```cpp
 // Thread 3
 Pathfinding::Path path = algo.computePath(memory3, startX, startY, endX, endY);
 // do something with the path
