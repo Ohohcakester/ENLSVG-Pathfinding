@@ -1,8 +1,13 @@
 # ENLSVG-Pathfinding
+![Pathfinding-Demo](https://cloud.githubusercontent.com/assets/5209333/26408031/4dcd5b54-40cf-11e7-842e-e43318cebe8d.gif)
 
 An implementation of the Edge N-Level Sparse Visibility Graph algorithm for extremely fast optimal Any-Angle Pathfinding on grid maps. (on the order of a millisecond per path computation on 6000x6000 grids)
 
 The ENLSVG algorithm requires a pre-processing step, which may take some time, depending on the size of the grid map.
+
+Note: gif taken from the [ENLSVG Pathfinding Demo](https://github.com/Ohohcakester/PathfindingDemo)
+
+License: [Unlicense](http://unlicense.org/) (i.e. do whatever you want with it)
 
 # Building
 
