@@ -12,7 +12,7 @@ void RandomGridGenerator::generateRandomGrid(Grid& grid, const float percentBloc
 
     for (int y=0; y<sizeY; ++y) {
         for (int x=0; x<sizeX; ++x) {
-            grid.blocked[y][x] = global_rng.bernoulli(percentBlocked);
+            grid.setBlocked(x, y, global_rng.bernoulli(percentBlocked));
         }
     }
 }
@@ -25,7 +25,7 @@ void RandomGridGenerator::generateAutomataGrid(Grid& grid, const float percentBl
 
     generateRandomGrid(grid, percentBlocked);
 
-    std::vector<std::vector<bool>>& blocked = grid.blocked;
+    //std::vector<std::vector<bool>>& blocked = grid.blocked;
     // Count: used for DP computation of number of blocked neighbours.
     //  Note: count includes the current tile as well. We subtract it when we compare with cutoff.
     std::vector<std::vector<int>> count;
@@ -40,7 +40,7 @@ void RandomGridGenerator::generateAutomataGrid(Grid& grid, const float percentBl
         // Adjust counts to exclude the center.
         for (int y=0;y<sizeY;++y) {
             for (int x=0;x<sizeX;++x) {
-                count[y][x] = (count[y][x] - (blocked[y][x] ? 1 : 0));
+                count[y][x] = (count[y][x] - (grid.isBlockedRaw(x, y) ? 1 : 0));
             }
         }
         
@@ -90,7 +90,7 @@ void RandomGridGenerator::generateAutomataGrid(Grid& grid, const float percentBl
         
         for (int y=0;y<sizeY;++y) {
             for (int x=0;x<sizeX;++x) {
-                blocked[y][x] = count[y][x] >= cutoff;
+                grid.setBlocked(x, y, count[y][x] >= cutoff);
             }
         }
     }
@@ -110,7 +110,6 @@ void RandomGridGenerator::runAutomataIterationBlockedBorders(const int resolutio
      */
     const int sizeX = grid.sizeX;
     const int sizeY = grid.sizeY;
-    std::vector<std::vector<bool>>& blocked = grid.blocked;
 
     { // Base case: y = 0
         int y = 0;
@@ -121,7 +120,7 @@ void RandomGridGenerator::runAutomataIterationBlockedBorders(const int resolutio
                 for (int j=-resolution;j<=resolution;++j) {
                     int px = x + i;
                     int py = y + j;
-                    nBlocked += (px < 0 || py < 0 || px >= sizeX || py >= sizeY || blocked[py][px]) ? 1 : 0;
+                    nBlocked += (px < 0 || py < 0 || px >= sizeX || py >= sizeY || grid.isBlockedRaw(px, py)) ? 1 : 0;
                 }
             }
             
@@ -136,7 +135,7 @@ void RandomGridGenerator::runAutomataIterationBlockedBorders(const int resolutio
                 int px = x - resolution - 1;
                 for (int j=-resolution;j<=resolution;++j) {
                     int py = y + j;
-                    nBlocked -= (px < 0 || py < 0 || px >= sizeX || py >= sizeY || blocked[py][px]) ? 1 : 0;
+                    nBlocked -= (px < 0 || py < 0 || px >= sizeX || py >= sizeY || grid.isBlockedRaw(px, py)) ? 1 : 0;
                 }
             }
             
@@ -144,7 +143,7 @@ void RandomGridGenerator::runAutomataIterationBlockedBorders(const int resolutio
                 int px = x + resolution;
                 for (int j=-resolution;j<=resolution;++j) {
                     int py = y + j;
-                    nBlocked += (px < 0 || py < 0 || px >= sizeX || py >= sizeY || blocked[py][px]) ? 1 : 0;
+                    nBlocked += (px < 0 || py < 0 || px >= sizeX || py >= sizeY || grid.isBlockedRaw(px, py)) ? 1 : 0;
                 }
             }
             
@@ -163,7 +162,7 @@ void RandomGridGenerator::runAutomataIterationBlockedBorders(const int resolutio
                 int py = y - resolution - 1;
                 for (int i=-resolution;i<=resolution;++i) {
                     int px = x + i;
-                    nBlocked -= (px < 0 || py < 0 || px >= sizeX || py >= sizeY || blocked[py][px]) ? 1 : 0;
+                    nBlocked -= (px < 0 || py < 0 || px >= sizeX || py >= sizeY || grid.isBlockedRaw(px, py)) ? 1 : 0;
                 }
             }
             
@@ -171,7 +170,7 @@ void RandomGridGenerator::runAutomataIterationBlockedBorders(const int resolutio
                 int py = y + resolution;
                 for (int i=-resolution;i<=resolution;++i) {
                     int px = x + i;
-                    nBlocked += (px < 0 || py < 0 || px >= sizeX || py >= sizeY || blocked[py][px]) ? 1 : 0;
+                    nBlocked += (px < 0 || py < 0 || px >= sizeX || py >= sizeY || grid.isBlockedRaw(px, py)) ? 1 : 0;
                 }
             }
 
@@ -185,22 +184,22 @@ void RandomGridGenerator::runAutomataIterationBlockedBorders(const int resolutio
             { // add (x-1-r,y-1-r)
                 int px = x - resolution - 1;
                 int py = y - resolution - 1;
-                nBlocked += (px < 0 || py < 0 || px >= sizeX || py >= sizeY || blocked[py][px]) ? 1 : 0;
+                nBlocked += (px < 0 || py < 0 || px >= sizeX || py >= sizeY || grid.isBlockedRaw(px, py)) ? 1 : 0;
             }
             { // add (x+r,y+r)
                 int px = x + resolution;
                 int py = y + resolution;
-                nBlocked += (px < 0 || py < 0 || px >= sizeX || py >= sizeY || blocked[py][px]) ? 1 : 0;
+                nBlocked += (px < 0 || py < 0 || px >= sizeX || py >= sizeY || grid.isBlockedRaw(px, py)) ? 1 : 0;
             }
             { // subtract (x-1-r,y+r)
                 int px = x - resolution - 1;
                 int py = y + resolution;
-                nBlocked -= (px < 0 || py < 0 || px >= sizeX || py >= sizeY || blocked[py][px]) ? 1 : 0;
+                nBlocked -= (px < 0 || py < 0 || px >= sizeX || py >= sizeY || grid.isBlockedRaw(px, py)) ? 1 : 0;
             }
             { // subtract (x+r,y-1-r)
                 int px = x + resolution;
                 int py = y - resolution - 1;
-                nBlocked -= (px < 0 || py < 0 || px >= sizeX || py >= sizeY || blocked[py][px]) ? 1 : 0;
+                nBlocked -= (px < 0 || py < 0 || px >= sizeX || py >= sizeY || grid.isBlockedRaw(px, py)) ? 1 : 0;
             }
             
             count[y][x] = nBlocked;

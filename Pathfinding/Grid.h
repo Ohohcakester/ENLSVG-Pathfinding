@@ -8,21 +8,28 @@
 namespace Pathfinding {
 
 class Grid {
+private:
+    std::vector<bool> blocked;
 public:
     int sizeX;
     int sizeY;
     int totalSize;
-    std::vector<std::vector<bool>> blocked;
 
     Grid(int sizeX, int sizeY);
     void printGrid() const;
 
+    // isBlocked, but without boundary checks.
+    inline bool isBlockedRaw(int x, int y) const {
+        return blocked[y*sizeX + x];
+    }
+
+    // If (x, y) is outside of the grid's boundaries, returns true.
     inline bool isBlocked(int x, int y) const {
-        return x < 0 || y < 0 || x >= sizeX || y >= sizeY || blocked[y][x];
+        return x < 0 || y < 0 || x >= sizeX || y >= sizeY || blocked[y*sizeX + x];
     }
 
     inline void setBlocked(int x, int y, bool value) {
-        blocked[y][x] = value;
+        blocked[y*sizeX + x] = value;
     }
 
     inline bool isOuterCorner(int x, int y) const {

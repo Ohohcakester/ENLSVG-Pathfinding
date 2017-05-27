@@ -110,7 +110,7 @@ void Drawer::drawGrid(const Grid& grid) {
     Colour c;
     for (int y=0; y<gridSizeY; ++y) {
         for (int x=0; x<gridSizeX; ++x) {
-            c.r = c.g = c.b = (grid.blocked[y][x] ? 64 : 255);
+            c.r = c.g = c.b = (grid.isBlockedRaw(x,y) ? 64 : 255);
             int x1 = x*scale;
             int x2 = x1+scale;
             int y1 = y*scale;
