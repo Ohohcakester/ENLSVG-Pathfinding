@@ -28,9 +28,8 @@ void RandomGridGenerator::generateAutomataGrid(Grid& grid, const float percentBl
     //std::vector<std::vector<bool>>& blocked = grid.blocked;
     // Count: used for DP computation of number of blocked neighbours.
     //  Note: count includes the current tile as well. We subtract it when we compare with cutoff.
-    std::vector<std::vector<int>> count;
-    count.resize(sizeY);
-    for (int y=0;y<sizeY;++y) count[y].resize(sizeX, 0);
+    std::vector<int> count;
+    count.resize(sizeX*sizeY, 0);
 
     const int maxCount = (resolution*2+1) * (resolution*2+1) - 1;
     
@@ -40,7 +39,7 @@ void RandomGridGenerator::generateAutomataGrid(Grid& grid, const float percentBl
         // Adjust counts to exclude the center.
         for (int y=0;y<sizeY;++y) {
             for (int x=0;x<sizeX;++x) {
-                count[y][x] = (count[y][x] - (grid.isBlockedRaw(x, y) ? 1 : 0));
+                count[y*sizeX + x] = (count[y*sizeX + x] - (grid.isBlockedRaw(x, y) ? 1 : 0));
             }
         }
         
@@ -49,7 +48,7 @@ void RandomGridGenerator::generateAutomataGrid(Grid& grid, const float percentBl
 
         for (int y=0;y<sizeY;++y) {
             for (int x=0;x<sizeX;++x) {
-                totalCount += count[y][x];
+                totalCount += count[y*sizeX + x];
             }
         }
 
@@ -69,9 +68,9 @@ void RandomGridGenerator::generateAutomataGrid(Grid& grid, const float percentBl
         const float d = range/nBins;
         for (int y=0;y<sizeY;++y) {
             for (int x=0;x<sizeX;++x) {
-                int bin = (int)((count[y][x] - low)/d) + 1;
+                int bin = (int)((count[y*sizeX + x] - low)/d) + 1;
                 bin = std::max(std::min(bin, nBins+1), 0); // Clamp bin to [0,n+1]
-                binAverage[bin] = (binAverage[bin]*bins[bin] + count[y][x]) / (bins[bin]+1);
+                binAverage[bin] = (binAverage[bin]*bins[bin] + count[y*sizeX + x]) / (bins[bin]+1);
                 bins[bin]++;
             }
         }
@@ -90,13 +89,13 @@ void RandomGridGenerator::generateAutomataGrid(Grid& grid, const float percentBl
         
         for (int y=0;y<sizeY;++y) {
             for (int x=0;x<sizeX;++x) {
-                grid.setBlocked(x, y, count[y][x] >= cutoff);
+                grid.setBlocked(x, y, count[y*sizeX + x] >= cutoff);
             }
         }
     }
 }
 
-void RandomGridGenerator::runAutomataIterationBlockedBorders(const int resolution, Grid& grid, std::vector<std::vector<int>>& count) {
+void RandomGridGenerator::runAutomataIterationBlockedBorders(const int resolution, Grid& grid, std::vector<int>& count) {
     /*
      * Note: for brevity, the following code:
      * nBlocked += (px < 0 || py < 0 || px >= sizeX || py >= sizeY || grid[py*sizeY+px]) ? 1 : 0;
@@ -124,12 +123,12 @@ void RandomGridGenerator::runAutomataIterationBlockedBorders(const int resolutio
                 }
             }
             
-            count[y][x] = nBlocked;
+            count[y*sizeX + x] = nBlocked;
         }
 
         // y = 0, x > 0
         for (int x=1;x<sizeX;++x) {
-            int nBlocked = count[y][x-1];
+            int nBlocked = count[y*sizeX + (x-1)];
 
             { // subtract for (x-1-r,?)
                 int px = x - resolution - 1;
@@ -147,7 +146,7 @@ void RandomGridGenerator::runAutomataIterationBlockedBorders(const int resolutio
                 }
             }
             
-            count[y][x] = nBlocked;
+            count[y*sizeX + x] = nBlocked;
         }
     }
 
@@ -156,7 +155,7 @@ void RandomGridGenerator::runAutomataIterationBlockedBorders(const int resolutio
         // y > 0, x = 0
         {
             int x = 0;
-            int nBlocked = count[y-1][x];
+            int nBlocked = count[(y-1)*sizeX + x];
 
             { // subtract for (?,y-1-r)
                 int py = y - resolution - 1;
@@ -174,12 +173,12 @@ void RandomGridGenerator::runAutomataIterationBlockedBorders(const int resolutio
                 }
             }
 
-            count[y][x] = nBlocked;
+            count[y*sizeX + x] = nBlocked;
         }
         
         // y > 0, x > 0
         for (int x=1;x<sizeX;++x) {
-            int nBlocked = count[y-1][x] + count[y][x-1] - count[y-1][x-1];
+            int nBlocked = count[(y-1)*sizeX + x] + count[y*sizeX + (x-1)] - count[(y-1)*sizeX+ (x-1)];
 
             { // add (x-1-r,y-1-r)
                 int px = x - resolution - 1;
@@ -202,7 +201,7 @@ void RandomGridGenerator::runAutomataIterationBlockedBorders(const int resolutio
                 nBlocked -= (px < 0 || py < 0 || px >= sizeX || py >= sizeY || grid.isBlockedRaw(px, py)) ? 1 : 0;
             }
             
-            count[y][x] = nBlocked;
+            count[y*sizeX + x] = nBlocked;
         }
     }
 }

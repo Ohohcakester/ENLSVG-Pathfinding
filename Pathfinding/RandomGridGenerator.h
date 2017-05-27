@@ -11,7 +11,7 @@ public:
     static void generateAutomataGrid(Grid& grid, const float percentBlocked, const int iterations, const float resolutionMultiplier);
 
 private:
-    static void runAutomataIterationBlockedBorders(const int resolution, Grid& grid, std::vector<std::vector<int>>& count);
+    static void runAutomataIterationBlockedBorders(const int resolution, Grid& grid, std::vector<int>& count);
 };
 
 }
