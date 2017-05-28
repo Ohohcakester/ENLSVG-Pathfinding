@@ -53,17 +53,17 @@ namespace Pathfinding { namespace ENLSVG {
         pq.reinitialise();
 
         double goalDistance = POS_INF;
-        int goalParent = NO_PARENT;
+        VertexID goalParent = NO_PARENT;
         { // START: INITIALISATION
             ScannerStacks& data = memory.scannerStacks;
             {
-                const int startIndex = graph.nodeIndexes[sy][sx];
+                const VertexID startIndex = graph.nodeIndex(sx, sy);
                 // Add all visible neighbours of start vertex
                 scanner.computeAllDirNeighbours(data, sx, sy);
                 const std::vector<GridVertex>& neighbours = data.neighbours;
                 for (size_t i=0; i<neighbours.size(); ++i) {
                     const GridVertex& vn = neighbours[i];
-                    int neighbour = graph.nodeIndexes[vn.y][vn.x];
+                    VertexID neighbour = graph.nodeIndex(vn.x, vn.y);
 
                     double dist = grid.euclideanDistance(sx, sy, vn.x, vn.y);
                     memory.setDistance(neighbour, dist);
@@ -75,13 +75,13 @@ namespace Pathfinding { namespace ENLSVG {
                 }
             }
             {
-                const int goalIndex = graph.nodeIndexes[ey][ex];
+                const VertexID goalIndex = graph.nodeIndex(ex, ey);
                 // Add all visible neighbours of goal vertex
                 scanner.computeAllDirNeighbours(data, ex, ey);
                 const std::vector<GridVertex>& neighbours = data.neighbours;
                 for (size_t i=0; i<neighbours.size(); ++i) {
                     const GridVertex& vn = neighbours[i];
-                    int neighbour = graph.nodeIndexes[vn.y][vn.x];
+                    VertexID neighbour = graph.nodeIndex(vn.x, vn.y);
                     memory.setEdgeWeightToGoal(neighbour, grid.euclideanDistance(vn.x, vn.y, ex, ey));
                 }
                 if (goalIndex != -1) {
@@ -95,15 +95,15 @@ namespace Pathfinding { namespace ENLSVG {
             if (goalDistance <= pq.getMinValue()) {
                 break; // Reached Goal.
             }
-            int curr = pq.popMinIndex();
+            VertexID curr = pq.popMinIndex();
             const double currDistance = memory.distance(curr);
-            const int currParent = restorePar(memory.parent(curr));
+            const VertexID currParent = restorePar(memory.parent(curr));
             memory.setVisited(curr, true);
 
             const std::vector<EdgeID>& neighbours = graph.edgeLists[curr];
             for (size_t i=0;i<neighbours.size();++i) {
                 const auto& edge = graph.edges[neighbours[i]];
-                int dest = edge.destVertex;
+                VertexID dest = edge.destVertex;
                 if (memory.visited(dest)) continue;
                 double weight = edge.weight;
 
@@ -153,17 +153,17 @@ namespace Pathfinding { namespace ENLSVG {
 
         MarkedEdges& markedEdges = memory.markedEdges;
         double goalDistance = POS_INF;
-        int goalParent = NO_PARENT;
+        VertexID goalParent = NO_PARENT;
         { // START: INITIALISATION
             ScannerStacks& data = memory.scannerStacks;
             {
-                const int startIndex = graph.nodeIndexes[sy][sx];
+                const VertexID startIndex = graph.nodeIndex(sx, sy);
                 // Add all visible neighbours of start vertex
                 scanner.computeAllDirNeighbours(data, sx, sy);
                 const std::vector<GridVertex>& neighbours = data.neighbours;
                 for (size_t i=0; i<neighbours.size(); ++i) {
                     const GridVertex& vn = neighbours[i];
-                    int neighbour = graph.nodeIndexes[vn.y][vn.x];
+                    VertexID neighbour = graph.nodeIndex(vn.x, vn.y);
 
                     double dist = grid.euclideanDistance(sx, sy, vn.x, vn.y);
                     memory.setDistance(neighbour, dist);
@@ -176,13 +176,13 @@ namespace Pathfinding { namespace ENLSVG {
                 graph.markEdgesFrom(markedEdges, sx, sy, neighbours);
             }
             {
-                const int goalIndex = graph.nodeIndexes[ey][ex];
+                const VertexID goalIndex = graph.nodeIndex(ex, ey);
                 // Add all visible neighbours of goal vertex
                 scanner.computeAllDirNeighbours(data, ex, ey);
                 const std::vector<GridVertex>& neighbours = data.neighbours;
                 for (size_t i=0; i<neighbours.size(); ++i) {
                     const GridVertex& vn = neighbours[i];
-                    int neighbour = graph.nodeIndexes[vn.y][vn.x];
+                    VertexID neighbour = graph.nodeIndex(vn.x, vn.y);
                     memory.setEdgeWeightToGoal(neighbour, grid.euclideanDistance(vn.x, vn.y, ex, ey));
                 }
                 if (goalIndex != -1) {
@@ -198,9 +198,9 @@ namespace Pathfinding { namespace ENLSVG {
             if (goalDistance <= pq.getMinValue()) {
                 break; // Reached Goal, or min value = POS_INF (can't find goal)
             }
-            int curr = pq.popMinIndex();
+            VertexID curr = pq.popMinIndex();
             const double currDistance = memory.distance(curr);
-            const int currParent = restorePar(memory.parent(curr));
+            const VertexID currParent = restorePar(memory.parent(curr));
             memory.setVisited(curr, true);
 
             // Traverse marked edges
@@ -209,7 +209,7 @@ namespace Pathfinding { namespace ENLSVG {
                 const EdgeID edgeId = neighbours[i];
                 if (!markedEdges.isMarked[edgeId]) continue;
                 const auto& edge = graph.edges[edgeId];
-                int dest = edge.destVertex;
+                VertexID dest = edge.destVertex;
                 if (memory.visited(dest)) continue;
                 double weight = edge.weight;
 
@@ -225,7 +225,7 @@ namespace Pathfinding { namespace ENLSVG {
             const std::vector<SkipEdge>& skipEdges = graph.skipEdges[curr];
             for (size_t i=0;i<skipEdges.size();++i) {
                 const SkipEdge& edge = skipEdges[i];
-                int dest = edge.next;
+                VertexID dest = edge.next;
                 if (memory.visited(dest)) continue;
                 double weight = edge.weight;
 
@@ -254,7 +254,7 @@ namespace Pathfinding { namespace ENLSVG {
 
 
 
-    Path Algorithm::getPath(const Memory& memory, int goalParent,
+    Path Algorithm::getPath(const Memory& memory, VertexID goalParent,
     const int sx, const int sy, const int ex, const int ey) const {
         Path path;
 
@@ -262,7 +262,7 @@ namespace Pathfinding { namespace ENLSVG {
         if (goalParent == NO_PARENT) return path;
 
         // If the last vertex is not equal to the goal vertex.
-        if (graph.nodeIndexes[ey][ex] != goalParent) {
+        if (graph.nodeIndex(ex, ey) != goalParent) {
             path.push_back(GridVertex(ex,ey));
         }
 
@@ -326,7 +326,7 @@ namespace Pathfinding { namespace ENLSVG {
     }
 
     void Algorithm::setParentPointers(const Memory& memory,
-    int goalParent, int sx, int sy, int ex, int ey, ParentPtrs* parentPtrs) const {
+    VertexID goalParent, int sx, int sy, int ex, int ey, ParentPtrs* parentPtrs) const {
 
         parentPtrs->goal = GridVertex(ex, ey);
         parentPtrs->goalParent = (goalParent == NO_PARENT) ? parentPtrs->goal : graph.vertices[restorePar(goalParent)];

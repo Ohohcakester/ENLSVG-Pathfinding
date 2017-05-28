@@ -132,8 +132,8 @@ namespace ENLSVG {
             return grid.isTaut(x1, y1, x2, y2, x3, y3);
         }
 
-        Path getPath(const Memory& memory, int goalParent, const int sx, const int sy, const int ex, const int ey) const;
-        void setParentPointers(const Memory& memory, int goalParent, int sx, int sy, int ex, int ey, ParentPtrs* parentPtrs) const;
+        Path getPath(const Memory& memory, VertexID goalParent, const int sx, const int sy, const int ex, const int ey) const;
+        void setParentPointers(const Memory& memory, VertexID goalParent, int sx, int sy, int ex, int ey, ParentPtrs* parentPtrs) const;
     };
 }
 }

@@ -7,15 +7,14 @@ namespace Pathfinding {
 
 namespace ENLSVG {
     VisibilityGraph::VisibilityGraph(const Grid& grid, const LineOfSightScanner& scanner):
-        grid(grid), sizeX(grid.sizeX), sizeY(grid.sizeY), scanner(scanner) {
+        grid(grid), sizeX(grid.sizeX), sizeY(grid.sizeY), nodeIndexesSizeX(grid.sizeX+1), scanner(scanner) {
 
         // Initialise vertices (outer corners).
-        nodeIndexes.resize(sizeY+1);
-        for (int y=0;y<=sizeY;++y) nodeIndexes[y].resize(sizeX+1, -1);
+        nodeIndexes.resize(nodeIndexesSizeX*(sizeY+1));
         for (int y=0;y<=sizeY;++y) {
             for (int x=0;x<=sizeX;++x) {
                 if (grid.isOuterCorner(x,y)) {
-                    nodeIndexes[y][x] = vertices.size();
+                    nodeIndexes[y*nodeIndexesSizeX + x] = vertices.size();
                     vertices.push_back(GridVertex(x,y));
                 }
             }
@@ -34,7 +33,7 @@ namespace ENLSVG {
                 int nx = neighbours[j].x;
                 int ny = neighbours[j].y;
 
-                VertexID dest = nodeIndexes[ny][nx];
+                VertexID dest = nodeIndexes[ny*nodeIndexesSizeX + nx];
                 if (dest >= i) continue;
 
                 connectEdge(i, dest, cx, cy, nx, ny);
@@ -202,7 +201,7 @@ namespace ENLSVG {
 
         for (size_t i=0; i<neighbours.size(); ++i) {
             const GridVertex& u = neighbours[i];
-            const VertexID neighbour = nodeIndexes[u.y][u.x];
+            const VertexID neighbour = nodeIndexes[u.y*nodeIndexesSizeX + u.x];
             const std::vector<EdgeID>& edgeList = edgeLists[neighbour];
             for (size_t j=0; j<edgeList.size(); ++j) {
                 const EdgeID id = edgeList[j];

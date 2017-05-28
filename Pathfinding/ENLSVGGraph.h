@@ -64,12 +64,14 @@ namespace ENLSVG {
         void markEdgesFrom(MarkedEdges& markedEdges, const int sx, const int sy, const std::vector<GridVertex>& neighbours) const;
         void markBothWays(MarkedEdges& markedEdges) const;
         inline bool isSkipVertex(VertexID vertexID) const {return skipEdges[vertexID].size() > 0;}
+        inline VertexID nodeIndex(int x, int y) const {return nodeIndexes[y*nodeIndexesSizeX + x];}
 
         void printStatistics() const;
 
         static constexpr int LEVEL_W = std::numeric_limits<VertexID>::max();
         const int sizeX;
         const int sizeY;
+        const int nodeIndexesSizeX;
 
         // Indexed by VertexID
         std::vector<GridVertex> vertices;
@@ -77,7 +79,7 @@ namespace ENLSVG {
         std::vector<std::vector<SkipEdge>> skipEdges;
 
         // Indexed by grid coordinates.
-        std::vector<std::vector<VertexID>> nodeIndexes;
+        std::vector<VertexID> nodeIndexes;
 
         // Indexed by EdgeID
         std::vector<EdgeData> edges;

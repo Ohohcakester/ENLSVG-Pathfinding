@@ -56,36 +56,37 @@ public:
     void computeExtents();
 
     inline int leftUpExtent(int xL, int y) const {
-        return xL > sizeX ? sizeX : leftDownExtents[y+1][xL];
+        return xL > sizeX ? sizeX : leftDownExtents[(y+1)*extentsSizeX + xL];
     }
 
     inline int leftDownExtent(int xL, int y) const {
-        return xL > sizeX ? sizeX : leftDownExtents[y][xL];
+        return xL > sizeX ? sizeX : leftDownExtents[y*extentsSizeX + xL];
     }
     
     inline int leftAnyExtent(int xL, int y) const {
-        return std::max(leftDownExtents[y][xL], leftDownExtents[y+1][xL]);
+        return std::max(leftDownExtents[y*extentsSizeX + xL], leftDownExtents[(y+1)*extentsSizeX + xL]);
     }
 
     inline int rightUpExtent(int xR, int y) const {
-        return xR < 0 ? 0 : rightDownExtents[y+1][xR];
+        return xR < 0 ? 0 : rightDownExtents[(y+1)*extentsSizeX + xR];
     }
 
     inline int rightDownExtent(int xR, int y) const {
-        return xR < 0 ? 0 : rightDownExtents[y][xR];
+        return xR < 0 ? 0 : rightDownExtents[y*extentsSizeX + xR];
     }
 
     inline int rightAnyExtent(int xR, int y) const {
-        return std::min(rightDownExtents[y][xR], rightDownExtents[y+1][xR]);
+        return std::min(rightDownExtents[y*extentsSizeX + xR], rightDownExtents[(y+1)*extentsSizeX + xR]);
     }
 
 private:
     const Grid& grid;
     const int sizeX;
     const int sizeY;
+    const int extentsSizeX;
     
-    std::vector<std::vector<int>> rightDownExtents;
-    std::vector<std::vector<int>> leftDownExtents;
+    std::vector<int> rightDownExtents;
+    std::vector<int> leftDownExtents;
     
     void generateTautDirectionStartingStates(ScannerStacks& data, int sx, int sy) const;
     void generateAllDirectionStartingStates(ScannerStacks& data, int sx, int sy) const;

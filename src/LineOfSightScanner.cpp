@@ -3,7 +3,8 @@
 
 namespace Pathfinding {
 
-LineOfSightScanner::LineOfSightScanner(const Grid& grid): grid(grid), sizeX(grid.sizeX), sizeY(grid.sizeY) {
+LineOfSightScanner::LineOfSightScanner(const Grid& grid)
+    : grid(grid), sizeX(grid.sizeX), sizeY(grid.sizeY), extentsSizeX(grid.sizeX+1) {
     computeExtents();
 }
 
@@ -23,19 +24,14 @@ void LineOfSightScanner::computeTautDirNeighbours(ScannerStacks& data, int sx, i
 
 
 void LineOfSightScanner::computeExtents() {
-    rightDownExtents.resize(sizeY+2);
-    leftDownExtents.resize(sizeY+2);
-
-    for (int y=0;y<sizeY+2;++y) {
-        rightDownExtents[y].resize(grid.sizeX+1);
-        leftDownExtents[y].resize(grid.sizeX+1);
-    }
+    rightDownExtents.resize(extentsSizeX*(sizeY+2));
+    leftDownExtents.resize(extentsSizeX*(sizeY+2));
 
     for (int y=0;y<sizeY+2;++y) {
         bool lastIsBlocked = true;
         int lastX = -1;
         for (int x=0;x<=sizeX;++x) {
-            leftDownExtents[y][x] = lastX; 
+            leftDownExtents[y*extentsSizeX + x] = lastX; 
             if (grid.isBlocked(x, y-1) != lastIsBlocked) {
                 lastX = x;
                 lastIsBlocked = !lastIsBlocked;
@@ -44,7 +40,7 @@ void LineOfSightScanner::computeExtents() {
         lastIsBlocked = true;
         lastX = sizeX+1;
         for (int x=sizeX;x>=0;--x) {
-            rightDownExtents[y][x] = lastX; 
+            rightDownExtents[y*extentsSizeX + x] = lastX; 
             if (grid.isBlocked(x-1, y-1) != lastIsBlocked) {
                 lastX = x;
                 lastIsBlocked = !lastIsBlocked;
@@ -422,7 +418,7 @@ void LineOfSightScanner::generateAndSplitIntervals(ScannerStacks& data, int chec
 
     // Divide up the intervals.
     while(true) {
-        int right = rightDownExtents[checkY][leftFloor]; // it's actually rightDownExtents for exploreDownwards. (thus we use checkY = currY - 2)
+        int right = rightDownExtents[checkY*extentsSizeX + leftFloor]; // it's actually rightDownExtents for exploreDownwards. (thus we use checkY = currY - 2)
         if (rightBound <= right) break; // right < rightBound            
         
         // Only push unblocked ( bottomRightOfBlockedTile )
