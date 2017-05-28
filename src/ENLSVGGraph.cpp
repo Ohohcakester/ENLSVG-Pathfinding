@@ -19,6 +19,7 @@ namespace ENLSVG {
                 }
             }
         }
+        vertices.shrink_to_fit();
 
         // Initialise SVG edges
         edgeLists.resize(vertices.size());
@@ -38,6 +39,10 @@ namespace ENLSVG {
 
                 connectEdge(i, dest, cx, cy, nx, ny);
             }
+        }
+        edges.shrink_to_fit();
+        for (size_t i=0; i<edgeLists.size(); ++i) {
+            edgeLists[i].shrink_to_fit();
         }
 
         // Connect Taut Neighbours of Edges
@@ -64,6 +69,7 @@ namespace ENLSVG {
                     tautOutgoingEdges.push_back(succ);
                 }
             }
+            tautOutgoingEdges.shrink_to_fit();
         }
 
         skipEdges.resize(vertices.size());
@@ -168,6 +174,10 @@ namespace ENLSVG {
                 followLevelWPathToNextSkipVertex(edgeList[j], totalWeight, nextVertex, immediateNext, immediateLast, isSkipVertex);
                 skipEdges[curr].push_back(SkipEdge(nextVertex, totalWeight, immediateNext, immediateLast));
             }
+        }
+
+        for (size_t i=0; i<skipEdges.size(); ++i) {
+            skipEdges[i].shrink_to_fit();
         }
     }
 
