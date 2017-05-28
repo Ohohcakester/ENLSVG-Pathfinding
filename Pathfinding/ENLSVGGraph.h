@@ -65,6 +65,8 @@ namespace ENLSVG {
         void markBothWays(MarkedEdges& markedEdges) const;
         inline bool isSkipVertex(VertexID vertexID) const {return skipEdges[vertexID].size() > 0;}
 
+        void printStatistics() const;
+
         static constexpr int LEVEL_W = std::numeric_limits<VertexID>::max();
         const int sizeX;
         const int sizeY;

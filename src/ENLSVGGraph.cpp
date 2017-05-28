@@ -249,4 +249,35 @@ namespace ENLSVG {
             if (!markedEdges.isMarked[opp]) markedEdges.mark(opp);
         }
     }
+
+
+    void VisibilityGraph::printStatistics() const {
+        int nVertices = vertices.size();
+        int nEdges = edges.size();
+
+        int totalEdgeDegree = 0;
+        for (auto& edge : edges) {
+            totalEdgeDegree += edge.tautOutgoingEdges.size();
+        }
+        float averageEdgeDegree = (float)totalEdgeDegree / nEdges;
+
+        int totalVertexDegree = 0;
+        for (auto& edgeList : edgeLists) {
+            totalVertexDegree += edgeList.size();
+        }
+        float averageVertexDegree = (float)totalVertexDegree / nVertices;
+
+        int nSkipEdges = 0;
+        for (auto& skipEdge : skipEdges) {
+            nSkipEdges += skipEdge.size();
+        }
+
+        std::cout << "nVertices: " << nVertices << std::endl;
+        std::cout << "nEdges: " << nEdges << std::endl;
+        std::cout << "nSkipEdges: " << nSkipEdges << std::endl;
+        std::cout << "totalEdgeDegree: " << totalEdgeDegree << std::endl;
+        std::cout << "totalVertexDegree: " << totalVertexDegree << std::endl;
+        std::cout << "averageEdgeDegree: " << averageEdgeDegree << std::endl;
+        std::cout << "averageVertexDegree: " << averageVertexDegree << std::endl;
+    }
 }}

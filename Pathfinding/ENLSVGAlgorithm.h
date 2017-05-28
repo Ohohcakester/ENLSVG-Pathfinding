@@ -110,6 +110,8 @@ namespace ENLSVG {
         size_t nVertices() const;
         size_t nEdges() const;
 
+        void printStatistics() const {graph.printStatistics();}
+
     private:
         inline double heuristic(int index, int ex, int ey) const {
             int dx = graph.vertices[index].x - ex;
