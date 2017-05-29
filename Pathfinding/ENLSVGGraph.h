@@ -18,9 +18,7 @@ namespace ENLSVG {
         const VertexID destVertex;
         int level;
         std::vector<EdgeID> tautOutgoingEdges;
-
-        inline bool isOriginal() const {return sourceVertex < destVertex;}
-
+        
         EdgeData(VertexID sourceVertex, VertexID destVertex, int level)
         : sourceVertex(sourceVertex), destVertex(destVertex), level(level) {}
     };
