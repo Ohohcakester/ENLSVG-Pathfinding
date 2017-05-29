@@ -105,7 +105,7 @@ namespace Pathfinding { namespace ENLSVG {
                 const auto& edge = graph.edges[neighbours[i]];
                 VertexID dest = edge.destVertex;
                 if (memory.visited(dest)) continue;
-                double weight = edge.weight;
+                double weight = graph.weight(edge);
 
                 double destDistance = currDistance + weight;
                 if (destDistance < memory.distance(dest) && isTaut(currParent, curr, dest)) {
@@ -211,7 +211,7 @@ namespace Pathfinding { namespace ENLSVG {
                 const auto& edge = graph.edges[edgeId];
                 VertexID dest = edge.destVertex;
                 if (memory.visited(dest)) continue;
-                double weight = edge.weight;
+                double weight = graph.weight(edge);
 
                 double destDistance = currDistance + weight;
                 if (destDistance < memory.distance(dest) && isTaut(currParent, curr, dest)) {

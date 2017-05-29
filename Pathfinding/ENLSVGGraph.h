@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <limits>
+#include <cmath>
 
 namespace Pathfinding { 
 
@@ -16,14 +17,13 @@ namespace ENLSVG {
         EdgeID oppositeEdge;
         const VertexID sourceVertex;
         const VertexID destVertex;
-        const double weight;
         int level;
         std::vector<EdgeID> tautOutgoingEdges;
 
         inline bool isOriginal() const {return sourceVertex < destVertex;}
 
-        EdgeData(VertexID sourceVertex, VertexID destVertex, double weight, int level)
-        : sourceVertex(sourceVertex), destVertex(destVertex), weight(weight), level(level) {}
+        EdgeData(VertexID sourceVertex, VertexID destVertex, int level)
+        : sourceVertex(sourceVertex), destVertex(destVertex), level(level) {}
     };
 
     struct SkipEdge {
@@ -65,6 +65,16 @@ namespace ENLSVG {
         void markBothWays(MarkedEdges& markedEdges) const;
         inline bool isSkipVertex(VertexID vertexID) const {return skipEdges[vertexID].size() > 0;}
         inline VertexID nodeIndex(int x, int y) const {return nodeIndexes[y*nodeIndexesSizeX + x];}
+        inline double weight(const EdgeData& edge) const {
+            const GridVertex& u = vertices[edge.sourceVertex];
+            const GridVertex& v = vertices[edge.destVertex];
+            int dx = v.x - u.x;
+            int dy = v.y - u.y;
+            return sqrt(dx*dx+dy*dy);
+        }
+        inline double weight(EdgeID edgeId) const {
+            return weight(edges[edgeId]);
+        }
 
         void printStatistics() const;
 

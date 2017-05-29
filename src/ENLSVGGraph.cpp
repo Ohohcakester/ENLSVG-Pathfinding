@@ -77,13 +77,11 @@ namespace ENLSVG {
     }
 
     void VisibilityGraph::connectEdge(int i, int j, int xi, int yi, int xj, int yj) {
-        double weight = grid.euclideanDistance(xi,yi,xj,yj);
-
         EdgeID edge_ij = edges.size();
-        edges.push_back(EdgeData(i, j, weight, LEVEL_W));
+        edges.push_back(EdgeData(i, j, LEVEL_W));
 
         EdgeID edge_ji = edges.size();
-        edges.push_back(EdgeData(j, i, weight, LEVEL_W));
+        edges.push_back(EdgeData(j, i, LEVEL_W));
 
         edges[edge_ij].oppositeEdge = edge_ji;
         edges[edge_ji].oppositeEdge = edge_ij;
@@ -185,7 +183,7 @@ namespace ENLSVG {
         double& totalWeight, VertexID& nextVertex, VertexID& immediateNext,
         VertexID& immediateLast, const std::vector<bool>& isSkipVertex) const {
         EdgeID currEdge = firstEdge;
-        totalWeight = edges[currEdge].weight; // RETURN VALUE
+        totalWeight = weight(currEdge); // RETURN VALUE
         immediateNext = edges[currEdge].destVertex; // RETURN VALUE
 
         while (!isSkipVertex[edges[currEdge].destVertex]) {
@@ -199,7 +197,7 @@ namespace ENLSVG {
                     break;
                 }
             }
-            totalWeight += edges[currEdge].weight;
+            totalWeight += weight(currEdge);
             // This should not infinite loop done correctly.
         }
         immediateLast = edges[currEdge].sourceVertex; // RETURN VALUE
