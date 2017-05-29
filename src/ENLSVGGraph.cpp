@@ -83,8 +83,13 @@ namespace ENLSVG {
         EdgeID edge_ji = edges.size();
         edges.push_back(EdgeData(j, i, LEVEL_W));
 
-        edges[edge_ij].oppositeEdge = edge_ji;
-        edges[edge_ji].oppositeEdge = edge_ij;
+        // Note: The following must be true:
+        // 1. edge_ij % 2 == 0
+        // 2. edge_ji % 2 == 1
+        // 3. edge_ij + 1 = edge_ji
+        // We do this so that we can use the opposite(edgeId) function to get the opposite edge.
+
+        //if (! ((edge_ij % 2 == 0) && (edge_ji % 2 == 1) && (edge_ji == edge_ij + 1)) ) std::cout << "error!" << std::endl;
 
         edgeLists[i].push_back(edge_ij);
         edgeLists[j].push_back(edge_ji);

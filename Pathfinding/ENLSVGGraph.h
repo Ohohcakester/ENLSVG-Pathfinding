@@ -14,7 +14,6 @@ class LineOfSightScanner;
 
 namespace ENLSVG {
     struct EdgeData {
-        EdgeID oppositeEdge;
         const VertexID sourceVertex;
         const VertexID destVertex;
         int level;
@@ -98,7 +97,9 @@ namespace ENLSVG {
         const Grid& grid;
         const LineOfSightScanner& scanner;
 
-        inline EdgeID opposite(EdgeID edgeID) const {return edges[edgeID].oppositeEdge;}
+        inline EdgeID opposite(EdgeID edgeID) const {
+            return (edgeID % 2 == 0) ? edgeID + 1 : edgeID - 1;
+        }
 
         void connectEdge(int i, int j, int xi, int yi, int xj, int yj);
         void buildHierarchy();
