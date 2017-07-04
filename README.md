@@ -9,6 +9,8 @@ Note: gif taken from the [ENLSVG Pathfinding Demo](https://github.com/Ohohcakest
 
 License: [Unlicense](http://unlicense.org/) (i.e. do whatever you want with it)
 
+ENLSVG Algorithm: [Paper (SoCS-17)](https://aaai.org/ocs/index.php/SOCS/SOCS17/paper/view/15790) and [Slides](http://ohoh.byethost7.com/Contents/Projects/AnyAnglePathfinding/ENLSVG_SoCS17.pdf)
+
 # Building
 
 - Include the repository in your project, and build the library using CMake.
